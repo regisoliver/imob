@@ -1,0 +1,7 @@
+{
+  "name": "c-imob",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
