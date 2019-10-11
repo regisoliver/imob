@@ -27,7 +27,7 @@ export class DetailsPage implements OnInit {
   ) {
     this.productId = this.activatedRoute.snapshot.params['id'];
 
-    if (this.productId) this.loadProduct();
+    //if (this.productId) this.loadProduct();
   }
 
   ngOnInit() { }
@@ -36,16 +36,18 @@ export class DetailsPage implements OnInit {
     if (this.productSubscription) this.productSubscription.unsubscribe();
   }
 
+  /*
   loadProduct() {
     this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
       this.product = data;
     });
   }
+  */
 
   async saveProduct() {
     await this.presentLoading();
 
-    this.product.userId = this.authService.getAuth().currentUser.uid;
+    this.product.id = this.authService.getAuth().currentUser.uid;
 
     if (this.productId) {
       try {

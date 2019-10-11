@@ -17,11 +17,11 @@ export interface Product {
     VISITAS?: string;
     PROPRIETARIO?: string;
     TELEFONE?: number;
-    DATA_ENTRADA?: Date;
+    DATA_ENTRADA?: number;
     CANAL?: string;
     CORRETOR?: string;
     STATUS?: string;
     OBS?: string;
 
-    picture: string;
+    //picture: string;
 }
