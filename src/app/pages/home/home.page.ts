@@ -16,12 +16,12 @@ export class HomePage implements OnInit {
   loading: any;
 
   constructor(
-    private productsService: ProductService,
+    //private productsService: ProductService,
     private authService: AuthService
-  ) {
+  ) {/*
     this.productsSubscription = this.productsService.getProducts().Subscription(data => {
       this.products = data;
-    });
+    }); */
   }
 
   ngOnInit() {
