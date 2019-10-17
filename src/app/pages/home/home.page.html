@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>home teste</ion-title>
+    <ion-title>Home Imob</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list *ngIf="!products.length">
-    <ion-item *ngFor="let item of [0, 1, 2]">
+    <ion-item *ngFor="let item of [0, 1, 2, 3, 4]">
       <ion-avatar slot="start">
         <ion-skeleton-text animated></ion-skeleton-text>
       </ion-avatar>
@@ -32,12 +32,14 @@
         </ion-avatar>
 
         <ion-label>
-          {{ product.CODIGO }}
-          <p>{{ product.ENDERECO }}</p>
-          <p>{{ product.DATA_ENTRADA | date: 'short' }}</p>
+          {{ product.status }}
+          <p>{{ product.tipo }}</p>
+          <p>{{ product.finalidade }}</p>
+          <p>{{ product.valor }}</p>
+          <p>{{ product.data_entrada | date: 'short' }}</p>
         </ion-label>
 
-        <ion-note color="primary" slot="end" *ngIf="product.VALOR">{{ product.VALOR | currency: 'BRL' }}</ion-note>
+        <ion-note color="primary" slot="end" *ngIf="product.valor">{{ product.valor | currency: 'BRL' }}</ion-note>
       </ion-item>
 
       <ion-item-options side="end">

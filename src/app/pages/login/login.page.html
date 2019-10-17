@@ -1,6 +1,6 @@
   <ion-content class="swiper-no-swiping">
     <div class="container top">
-      <img src="/assets/img/logo_app.fw.png" class="imagem">
+      <img src="/assets/img/logo_app.fw.png">
       <ion-segment (ionChange)="segmentChanged($event)" value="login">
         <ion-segment-button value="login">
           <ion-label>Login</ion-label>
@@ -34,7 +34,7 @@
           <span>Cadastro</span>
     
           <ion-item class="ion-margin-top" lines="none">
-            <ion-input type="text" placeholder="Nome"></ion-input>
+            <ion-input type="text" placeholder="Nome" [(ngModel)]="userRegister.nome"></ion-input>
           </ion-item>
     
           <ion-item class="ion-margin-top" lines="none">

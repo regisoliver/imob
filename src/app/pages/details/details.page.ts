@@ -12,6 +12,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
+
+  //data-picker product.aniversario
+  customYearValues = [2020, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
+  customDayShortNames = ['s\u00f8n', 'man', 'tir', 'ons', 'tor', 'fre', 'l\u00f8r'];
+  customPickerOptions: any;
   
   private productId: string = null;
   public product: Product = {};
@@ -29,6 +34,20 @@ export class DetailsPage implements OnInit {
     this.productId = this.activatedRoute.snapshot.params['id'];
 
     if (this.productId) this.loadProduct();
+
+    //data-picker product.aniversario
+    this.customPickerOptions = {
+      buttons: [{
+        text: 'Save',
+        handler: () => console.log('Aniversario Salvo!')
+      }, {
+        text: 'Log',
+        handler: () => {
+          console.log('Erro ao salvar o Aniversario');
+          return false;
+        }
+      }]
+    }
   }
 
   ngOnInit() { }
@@ -48,8 +67,9 @@ export class DetailsPage implements OnInit {
   async saveProduct() {
     await this.presentLoading();
 
-    this.product.id = this.authService.getAuth().currentUser.uid;
-
+    //this.product.corretor = this.authService.getAuth().currentUser.uid;
+    this.product.corretor = this.authService.getAuth().currentUser.displayName;
+    
     if (this.productId) {
       try {
         await this.productService.updateProduct(this.productId, this.product);
@@ -61,7 +81,7 @@ export class DetailsPage implements OnInit {
         this.loading.dismiss();
       }
     } else {
-      this.product.DATA_ENTRADA = new Date().getTime();
+      this.product.data_entrada = new Date().getTime();
 
       try {
         await this.productService.addProduct(this.product);

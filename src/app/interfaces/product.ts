@@ -1,27 +1,33 @@
 export interface Product {
+    //detalhes
+    status?: string;
     id?: string;
-    CODIGO?: string;
-    ENDERECO?: string;
-    BAIRRO?: string;
-    AREA_UTIL?: string;
-    AREA_TOTAL?: string;
-    VALOR?: string;
-    PERMUTA?: string;
-    OBSERVACAO?: string;
-    DORMITORIOS?: number;
-    SUITES?: number;
-    TIPO?: string;
-    VALOR_CONDOMINIO?: string;
-    VALOR_IPTU?: string;
-    FINALIDADE?: string;
-    VISITAS?: string;
-    PROPRIETARIO?: string;
-    TELEFONE?: number;
-    DATA_ENTRADA?: number;
-    CANAL?: string;
-    CORRETOR?: string;
-    STATUS?: string;
-    OBS?: string;
-    picture?: string;
+    codigo?: string;
+    tipo?: string;
+    dormitorios?: number;
+    suites?: number;
+    finalidade?: string;
+    valor_condominio?: number;
+    valor_iptu?: number;
+    valor?: number;
+    //endereco
+    endereco?: string;
+    bairro?: string;
+    //area
+    area_util?: number;
+    area_total?: number;
+    observacao?: string;
+    //proprietario
+    proprietario?: string;
+    telefone?: number;
+    permuta?: string;
+    aniversario?: number;
+    //produto
+    picture?: string
+    visitas?: string;
+    data_entrada?: number;
+    canal?: string;
+    corretor?: string;
+    obs?: string;
     detalhe?: String;
 }
