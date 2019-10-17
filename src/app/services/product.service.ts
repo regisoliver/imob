@@ -7,15 +7,12 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductService {
-  //private productsCollection = AngularFirestoreCollection<Product>(); //funcionando****
-  //private productsColletion = this.afs.collection<Product>('Products');
+  private productsCollection: AngularFirestoreCollection<Product>;
 
-  //constructor(private afs: AngularFirestore) { }
   constructor(private afs: AngularFirestore) {
-    //this.productsCollection = this.afs.collection<Product>('Products');
+    this.productsCollection = this.afs.collection<Product>('Products');
   }
 
-  /*
   getProducts() {
     return this.productsCollection.snapshotChanges().pipe(
       map(actions => {
@@ -28,22 +25,21 @@ export class ProductService {
       })
     )
   }
-  */
 
   addProduct(product: Product) {
-
+    return this.productsCollection.add(product);
   }
 
   getProduct(id: string) {
-
+    return this.productsCollection.doc<Product>(id).valueChanges();
   }
 
   updateProduct(id: string, product: Product) {
-
+    return this.productsCollection.doc<Product>(id).update(product);
   }
 
   deleteProduct(id: string) {
-
+    return this.productsCollection.doc(id).delete();
   }
 
 }

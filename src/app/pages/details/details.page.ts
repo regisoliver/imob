@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
+  
   private productId: string = null;
   public product: Product = {};
   private loading: any;
@@ -27,7 +28,7 @@ export class DetailsPage implements OnInit {
   ) {
     this.productId = this.activatedRoute.snapshot.params['id'];
 
-    //if (this.productId) this.loadProduct();
+    if (this.productId) this.loadProduct();
   }
 
   ngOnInit() { }
@@ -36,13 +37,13 @@ export class DetailsPage implements OnInit {
     if (this.productSubscription) this.productSubscription.unsubscribe();
   }
 
-  /*
+  
   loadProduct() {
     this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
       this.product = data;
     });
   }
-  */
+  
 
   async saveProduct() {
     await this.presentLoading();

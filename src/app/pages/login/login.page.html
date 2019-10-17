@@ -1,6 +1,6 @@
   <ion-content class="swiper-no-swiping">
     <div class="container top">
-      <img src="/assets/img/logo-original.jpeg" class="imagem">
+      <img src="/assets/img/logo_app.fw.png" class="imagem">
       <ion-segment (ionChange)="segmentChanged($event)" value="login">
         <ion-segment-button value="login">
           <ion-label>Login</ion-label>
@@ -24,7 +24,7 @@
             <ion-input type="password" placeholder="Senha" [(ngModel)]="userLogin.password"></ion-input>
           </ion-item>
 
-          <ion-button class="ion-margin-top" (click)="login()" expand="block">
+          <ion-button class="ion-margin-top" (click)="login()" expand="block" color="#fff">
             Entrar
           </ion-button>
         </div>
@@ -45,7 +45,7 @@
             <ion-input type="password" placeholder="Senha" [(ngModel)]="userRegister.password"></ion-input>
           </ion-item>
     
-          <ion-button class="ion-margin-top" (click)="register()" expand="block">
+          <ion-button class="ion-margin-top" (click)="register()" expand="block" color="#fff">
             Cadastrar
           </ion-button>
         </div>

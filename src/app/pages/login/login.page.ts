@@ -11,7 +11,6 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginPage implements OnInit {
   @ViewChild(IonSlides, null) slides: IonSlides;
-
   public userLogin: User = {};
   public userRegister: User = {};
   private loading: any;

@@ -11,17 +11,19 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  private products = new Array<Product>();
+  private loading: any;
+  public products = new Array<Product>();
   private productsSubscription: Subscription;
-  loading: any;
 
   constructor(
-    //private productsService: ProductService,
-    private authService: AuthService
-  ) {/*
-    this.productsSubscription = this.productsService.getProducts().Subscription(data => {
+    private productsService: ProductService,
+    private authService: AuthService,
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController,
+  ) {
+    this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
-    }); */
+    });
   }
 
   ngOnInit() {
@@ -32,7 +34,7 @@ export class HomePage implements OnInit {
   }
 
   async logout() {
-    //await this.presentLoading();
+    await this.presentLoading();
 
     try {
       await this.authService.logout();
@@ -43,22 +45,21 @@ export class HomePage implements OnInit {
     }
   }
 
-  /*async presentLoading() {
+  async presentLoading() {
     this.loading = await this.loadingCtrl.create({ message: 'Aguarde...' });
     return this.loading.present();
-  }*/
+  }
 
-  /*async deleteProduct(id: string) {
+  async deleteProduct(id: string) {
     try {
-      await this.productService.deleteProduct(id);
+      await this.productsService.deleteProduct(id);
     } catch (error) {
       this.presentToast('Erro ao tentar deletar');
     }
-  }*/
+  }
 
-  /*async presentToast(message: string) {
+  async presentToast(message: string) {
     const toast = await this.toastCtrl.create({ message, duration: 2000 });
     toast.present();
-  }*/
-
+  }
 }

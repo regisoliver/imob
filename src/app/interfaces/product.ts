@@ -22,6 +22,6 @@ export interface Product {
     CORRETOR?: string;
     STATUS?: string;
     OBS?: string;
-
-    //picture: string;
+    picture?: string;
+    detalhe?: String;
 }
