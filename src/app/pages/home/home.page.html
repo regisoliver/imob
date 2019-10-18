@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Home Imob</ion-title>
+    <ion-title>C.IMOB</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -27,47 +27,69 @@
   <ion-list>
     <ion-item-sliding *ngFor="let product of products">
       <ion-item button [routerLink]="['/details', product.id]">
-        <ion-avatar slot="start">
-          <img [src]="product.picture">
-        </ion-avatar>
+        <ion-card>
+          <ion-card-header>
+            <img [src]="product.picture">
+            <ion-card-subtitle>Status: {{product.status}}</ion-card-subtitle>
+            <ion-card-title>{{product.tipo}}</ion-card-title>
+          </ion-card-header>
 
-        <ion-label>
-          {{ product.status }}
-          <p>{{ product.tipo }}</p>
-          <p>{{ product.finalidade }}</p>
-          <p>{{ product.valor }}</p>
-          <p>{{ product.data_entrada | date: 'short' }}</p>
-        </ion-label>
+          <ion-card-content>
+            Keep close to Nature's heart... and break clear away, once in awhile,
+            and climb a mountain or spend a week in the woods. Wash your spirit clean.
+          </ion-card-content>
 
-        <ion-note color="primary" slot="end" *ngIf="product.valor">{{ product.valor | currency: 'BRL' }}</ion-note>
-      </ion-item>
+          <ion-item href="#">
+            <ion-icon name="clipboard" slot="start"></ion-icon>
+            <ion-label>Finalidade: {{product.finalidade}}</ion-label>
+          </ion-item>
 
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteProduct(product.id)">
-          <ion-icon slot="top" name="trash"></ion-icon>
+          <ion-item class="activated">
+            <ion-icon name="home" slot="start"></ion-icon>
+            <ion-label>Condomínio: {{ product.valor_condominio | currency: 'BRL' }}</ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="cart" slot="start"></ion-icon>
+            <ion-label>{{ product.valor | currency: 'BRL' }}</ion-label>
+          </ion-item>
+        </ion-card>
         
-        </ion-item-option>
-      </ion-item-options>
+      </ion-item>
+      <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteProduct(product.id)">
+            <ion-icon slot="top" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Carregando...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="share"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="person"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="danger" (click)="logout()">
+        <ion-icon name="power"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="top">
+      <ion-fab-button color="warning" routerLink="/details">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
-
 <ion-footer>
-  <ion-toolbar>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-button (click)="logout()" color="danger" expand="block">
-            Sair
-          </ion-button>
-        </ion-col>
-
-        <ion-col size="6">
-          <ion-button routerLink="/details" expand="block">
-            Add Imovel
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
+  <!-- Nada no footer -->
 </ion-footer>

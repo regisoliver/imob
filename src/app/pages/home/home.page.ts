@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController, IonInfiniteScroll } from '@ionic/angular';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
@@ -24,6 +24,26 @@ export class HomePage implements OnInit {
     this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
     });
+  }
+  //@ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll; -- VOLTAR
+
+  // evento carregamento da pagina
+  loadData(event) {
+    setTimeout(() => {
+      console.log('Done');
+      event.target.complete();
+
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll
+      if (this.products.length == 100) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
+  // scroll carregamento da pagina
+  toggleInfiniteScroll() {
+    //this.infiniteScroll.disabled = !this.infiniteScroll.disabled; --VOLTAR
   }
 
   ngOnInit() {

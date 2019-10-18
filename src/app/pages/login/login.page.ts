@@ -3,6 +3,7 @@ import { IonSlides, LoadingController, ToastController } from '@ionic/angular';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,9 @@ export class LoginPage implements OnInit {
     public Keyboard: Keyboard,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private authService: AuthService
+    private authService: AuthService,
+
+    private afs: AngularFirestore
   ) { }
 
   ngOnInit() {
@@ -67,11 +70,17 @@ export class LoginPage implements OnInit {
   }
 
   async register() {
-    //console.log(this.userRegister);
     await this.presentLoading();
 
     try {
-      await this.authService.register(this.userRegister);
+      const newUser = await this.authService.register(this.userRegister);
+      const newUserObject = Object.assign({}, this.userRegister);
+
+      delete newUserObject.password;
+      newUserObject.isAdmin = false;
+
+      console.log(newUser);
+      await this.afs.collection('Users').doc(newUser.user.uid).set(newUserObject);
     } catch (error) {
       let message: string;
 

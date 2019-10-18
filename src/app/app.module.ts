@@ -1,3 +1,5 @@
+import { FormsModule } from '@angular/forms';
+import { MbscModule } from '@mobiscroll/angular';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -17,7 +19,9 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [
+  imports: [ 
+    FormsModule,  
+    MbscModule, 
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,

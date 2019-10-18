@@ -17,7 +17,7 @@ export class DetailsPage implements OnInit {
   customYearValues = [2020, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
   customDayShortNames = ['s\u00f8n', 'man', 'tir', 'ons', 'tor', 'fre', 'l\u00f8r'];
   customPickerOptions: any;
-  
+
   private productId: string = null;
   public product: Product = {};
   private loading: any;
@@ -56,20 +56,19 @@ export class DetailsPage implements OnInit {
     if (this.productSubscription) this.productSubscription.unsubscribe();
   }
 
-  
+
   loadProduct() {
     this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
       this.product = data;
     });
   }
-  
+
 
   async saveProduct() {
     await this.presentLoading();
 
-    //this.product.corretor = this.authService.getAuth().currentUser.uid;
-    this.product.corretor = this.authService.getAuth().currentUser.displayName;
-    
+    this.product.corretor = this.authService.getAuth().currentUser.uid;
+
     if (this.productId) {
       try {
         await this.productService.updateProduct(this.productId, this.product);

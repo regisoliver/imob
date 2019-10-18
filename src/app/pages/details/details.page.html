@@ -107,9 +107,6 @@
       <ion-label color="primary" fixed>Telefone:</ion-label>
       <ion-input type="tel" [(ngModel)]="product.telefone" placeholder="(  )_____-_____"></ion-input>
     </ion-item>
-  </ion-list>
-
-  <ion-list>
     <ion-item>
       <ion-label color="primary">Aceita Permuta:</ion-label>
       <ion-select placeholder="Permuta" [(ngModel)]="product.permuta">
@@ -123,17 +120,28 @@
         displayFormat="DD/MMM/YYYY" monthShortNames="jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, des"
         [(ngModel)]="product.aniversario"></ion-datetime>
     </ion-item>
-    <ion-item-divider color="primary">
-      <ion-label>
-        Itens do Imovel
-      </ion-label>
-    </ion-item-divider>
+  </ion-list>
+  <ion-item-divider color="primary">
+    <ion-label>
+      Itens do Imovel
+    </ion-label>
+  </ion-item-divider>
+  <ion-list>
     <ion-item>
-      <ion-select multiple="true" cancelText="Voltar" okText="Ok!" [(ngModel)]="product.detalhe">
-        <ion-select-option value="Area de Lazer">Area de Lazer</ion-select-option>
-        <ion-select-option value="piscina">Piscina</ion-select-option>
-        <ion-select-option value="Churrasqueira">Churrasqueira</ion-select-option>
-      </ion-select>
+      <ion-item>
+        <ion-label>Piscina</ion-label>
+        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Sausage</ion-label>
+        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Mushrooms</ion-label>
+        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
+      </ion-item>
     </ion-item>
 
     <ion-item>
@@ -141,14 +149,13 @@
       <ion-textarea [(ngModel)]="product.observacao"></ion-textarea>
     </ion-item>
   </ion-list>
-  <ion-label color="primary">{{product.corretor}}</ion-label>
 
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <div>
     <ion-button (click)="saveProduct()" expand="block">
       Salvar Imovel
     </ion-button>
-  </ion-toolbar>
+  </div>
 </ion-footer>
