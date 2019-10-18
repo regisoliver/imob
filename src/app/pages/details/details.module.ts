@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { MbscModule } from '@mobiscroll/angular';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -23,7 +22,6 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    MbscModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
