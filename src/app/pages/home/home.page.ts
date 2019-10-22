@@ -4,6 +4,7 @@ import { LoadingController, ToastController, IonInfiniteScroll } from '@ionic/an
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +16,15 @@ export class HomePage implements OnInit {
   public products = new Array<Product>();
   private productsSubscription: Subscription;
 
+  sampleArr=[];
+  resultArr=[];
+
   constructor(
     private productsService: ProductService,
     private authService: AuthService,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
+    public fs: AngularFirestore,
   ) {
     this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
@@ -52,6 +57,37 @@ export class HomePage implements OnInit {
   ngOnDestroy() {
     this.productsSubscription.unsubscribe();
   }
+
+  
+  search(event){
+    let searchKey:string=event.target.value;
+    let firstLetter=searchKey.toUpperCase();
+
+    if(searchKey.length==0){
+      this.sampleArr=[];
+      this.resultArr=[];
+    }
+
+    if(this.sampleArr.length==0){
+      this.fs.collection('Products', ref=>ref.where('tipo','==',firstLetter)).snapshotChanges()
+      .subscribe(data=>{
+        data.forEach(childData => {
+          this.sampleArr.push(childData.payload.doc.data())
+        });
+      })
+    }else{
+      this.resultArr=[];
+      this.sampleArr.forEach(val=>{
+        let name:string=val['tipo'];
+        if(name.toUpperCase().startsWith(searchKey.toUpperCase())){
+          if(true){
+            this.resultArr.push(val);
+          }
+        }
+      })
+    }
+  }
+  
 
   async logout() {
     await this.presentLoading();

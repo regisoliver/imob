@@ -29,5 +29,8 @@ export interface Product {
     canal?: string;
     corretor?: string;
     obs?: string;
-    detalhe?: String;
+    detalhe_um?: boolean;
+    detalhe_dois?: boolean;
+    detalhe_tres?: boolean;
+    image?: string;
 }

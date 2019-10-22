@@ -4,6 +4,9 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- Searchbar with danger color -->
+<ion-searchbar showCancelButton="focus" (ionInput)="search($event)"></ion-searchbar>
+
 <ion-content>
   <ion-list *ngIf="!products.length">
     <ion-item *ngFor="let item of [0, 1, 2, 3, 4]">
@@ -34,12 +37,29 @@
             <ion-card-title color="primary">{{product.tipo}}</ion-card-title>
           </ion-card-header>
 
-          <ion-card-content>
-            Keep close to Nature's heart... and break clear away, once in awhile,
-            and climb a mountain or spend a week in the woods. Wash your spirit clean.
+
+          <ion-card-content cols="20">
+            <ion-label color="primary">Veja todas as imagens deste imóvel</ion-label>
+            <strong>Observação:</strong>
+            {{product.observacao}}
           </ion-card-content>
 
-          <ion-item href="#">
+          <ion-item *ngIf="product.detalhe_um == true">
+            <ion-icon name="boat" slot="start" color="tertiary" *ngIf="product.detalhe_um == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_um == true" color="primary">Imovel com Piscina</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="product.detalhe_dois == true">
+            <ion-icon name="football" slot="start" color="tertiary" *ngIf="product.detalhe_dois == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_dois == true" color="primary">Imovel com Area de Lazer</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="product.detalhe_tres == true">
+            <ion-icon name="bonfire" slot="start" color="tertiary" *ngIf="product.detalhe_tres == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_tres == true" color="primary">Imovel com Churrasqueira</ion-label>
+          </ion-item>
+
+          <ion-item>
             <ion-icon name="clipboard" slot="start" color="tertiary"></ion-icon>
             <ion-label>Finalidade: {{product.finalidade}}</ion-label>
           </ion-item>
@@ -51,32 +71,32 @@
 
           <ion-item>
             <ion-icon name="cart" slot="start" color="primary"></ion-icon>
-            <ion-label>{{ product.valor | currency: 'BRL' }}</ion-label>
+            <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label>
           </ion-item>
         </ion-card>
-        
+
       </ion-item>
       <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteProduct(product.id)">
-            <ion-icon slot="top" name="trash"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
+        <ion-item-option color="danger" (click)="deleteProduct(product.id)">
+          <ion-icon slot="top" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
+  <!--
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Carregando...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  -->
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="share"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button color="light">
+      <ion-fab-button color="light" routerLink="/profile">
         <ion-icon name="person"></ion-icon>
       </ion-fab-button>
       <ion-fab-button color="danger" (click)="logout()">

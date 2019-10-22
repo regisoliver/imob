@@ -17,7 +17,11 @@
   <ion-list>
     <ion-item>
       <ion-label color="primary" fixed>Status do Imovel:</ion-label>
-      <ion-input type="text" [(ngModel)]="product.status"></ion-input>
+      <ion-select placeholder="Status" [(ngModel)]="product.status">
+        <ion-select-option value="Disponível">Disponível</ion-select-option>
+        <ion-select-option value="ALUGADO">ALUGADO</ion-select-option>
+        <ion-select-option value="VENDIDO">VENDIDO</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label color="primary" fixed>Codigo Interno:</ion-label>
@@ -50,7 +54,7 @@
       <ion-select placeholder="Finalidade" [(ngModel)]="product.finalidade">
         <ion-select-option value="Venda">Venda</ion-select-option>
         <ion-select-option value="Locação">Locação</ion-select-option>
-        <ion-select-option value="Vend/Loc">Vend/Loc</ion-select-option>
+        <ion-select-option value="Venda/Locação">Venda/Locação</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -128,26 +132,20 @@
   </ion-item-divider>
   <ion-list>
     <ion-item>
-      <ion-item>
-        <ion-label>Piscina</ion-label>
-        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>Sausage</ion-label>
-        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>Mushrooms</ion-label>
-        <ion-toggle [(ngModel)]="product.detalhe"></ion-toggle>
-      </ion-item>
+      <ion-label color="primary">Piscina</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_um"></ion-checkbox>
     </ion-item>
-
     <ion-item>
-      <ion-label position="floating">Observação</ion-label>
-      <ion-textarea [(ngModel)]="product.observacao"></ion-textarea>
+      <ion-label color="primary">Area Lazer</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_dois"></ion-checkbox>
     </ion-item>
+    <ion-item>
+      <ion-label color="primary">Churrasqueira</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_tres"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+        <ion-textarea rows="6" cols="20" [(ngModel)]="product.observacao" placeholder="Comente sobre o imovel aqui..."></ion-textarea>
+      </ion-item>
   </ion-list>
 
 </ion-content>
