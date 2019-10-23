@@ -9,151 +9,182 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item-divider>
-    <ion-label>
-      Detalhes do Imovel
-    </ion-label>
-  </ion-item-divider>
-  <ion-list>
-    <ion-item>
-      <ion-label color="primary" fixed>Status do Imovel:</ion-label>
-      <ion-select placeholder="Status" [(ngModel)]="product.status">
-        <ion-select-option value="Disponível">Disponível</ion-select-option>
-        <ion-select-option value="ALUGADO">ALUGADO</ion-select-option>
-        <ion-select-option value="VENDIDO">VENDIDO</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Codigo Interno:</ion-label>
-      <ion-input type="text" [(ngModel)]="product.codigo"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Tipos de Imovel</ion-label>
-      <ion-select placeholder="Tipos" [(ngModel)]="product.tipo">
-        <ion-select-option value="Apartamento">Apartamento</ion-select-option>
-        <ion-select-option value="Área lazer">Área lazer</ion-select-option>
-        <ion-select-option value="Casa Condominio">Casa Condominio</ion-select-option>
-        <ion-select-option value="Casa Rua">Casa Rua</ion-select-option>
-        <ion-select-option value="Chacara">Chacara</ion-select-option>
-        <ion-select-option value="Comercial">Comercial</ion-select-option>
-        <ion-select-option value="Terreno Condomínio">Terreno Condomínio</ion-select-option>
-        <ion-select-option value="Terreno Rua">Terreno Rua</ion-select-option>
-        <ion-select-option value="Área Rural">Área Rural</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed> Número de Dormitórios:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.dormitorios"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed> Número de Suítes:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.suites"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Finalidade</ion-label>
-      <ion-select placeholder="Finalidade" [(ngModel)]="product.finalidade">
-        <ion-select-option value="Venda">Venda</ion-select-option>
-        <ion-select-option value="Locação">Locação</ion-select-option>
-        <ion-select-option value="Venda/Locação">Venda/Locação</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Valor Condominio:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.valor_condominio"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Valor IPTU:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.valor_iptu"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Valor do Imovel:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.valor"></ion-input>
-    </ion-item>
-  </ion-list>
-  <ion-item-divider>
-    <ion-label>
-      Endereço do Imovel
-    </ion-label>
-  </ion-item-divider>
-  <ion-list>
-    <ion-item>
-      <ion-input type="text" [(ngModel)]="product.endereco" placeholder="Endereço" color="primary"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-input type="text" [(ngModel)]="product.bairro" placeholder="Bairro" color="primary"></ion-input>
-    </ion-item>
-  </ion-list>
-  <ion-item-divider>
-    <ion-label>
-      Área do Imovel
-    </ion-label>
-  </ion-item-divider>
-  <ion-list>
-    <ion-item>
-      <ion-label color="primary" fixed>Área Útil:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.area_util"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Área Total:</ion-label>
-      <ion-input type="number" [(ngModel)]="product.area_total"></ion-input>
-    </ion-item>
-  </ion-list>
-  <ion-item-divider>
-    <ion-label>
-      Proprietário
-    </ion-label>
-  </ion-item-divider>
-  <ion-list>
-    <ion-item>
-      <ion-input type="text" [(ngModel)]="product.proprietario" placeholder="Proprietário"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" fixed>Telefone:</ion-label>
-      <ion-input type="tel" [(ngModel)]="product.telefone" placeholder="(  )_____-_____"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Aceita Permuta:</ion-label>
-      <ion-select placeholder="Permuta" [(ngModel)]="product.permuta">
-        <ion-select-option value="Sim">Sim</ion-select-option>
-        <ion-select-option value="Não">Não</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Aniversário:</ion-label>
-      <ion-datetime value="2019-01-01" min="1970-01" max="2020" [dayShortNames]="customDayShortNames"
-        displayFormat="DD/MMM/YYYY" monthShortNames="jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, des"
-        [(ngModel)]="product.aniversario"></ion-datetime>
-    </ion-item>
-  </ion-list>
-  <ion-item-divider>
-    <ion-label>
-      Itens do Imovel
-    </ion-label>
-  </ion-item-divider>
-  <ion-list>
-    <ion-item>
-      <ion-label color="primary">Piscina</ion-label>
-      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_um"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Area Lazer</ion-label>
-      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_dois"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary">Churrasqueira</ion-label>
-      <ion-checkbox slot="end" [(ngModel)]="product.detalhe_tres"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-        <ion-textarea rows="6" cols="20" [(ngModel)]="product.observacao" placeholder="Comente sobre o imovel aqui..."></ion-textarea>
+  <form [formGroup]="MyForm" (ngSubmit)="presentAlertConfirm(myForm.value)" novalidate>
+    <ion-item-divider>
+      <ion-label>
+        Detalhes do Imovel
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary" fixed>Status do Imovel:</ion-label>
+        <ion-select formControlName="status" placeholder="Status" [(ngModel)]="product.status">
+          <ion-select-option value="Disponível">Disponível</ion-select-option>
+          <ion-select-option value="ALUGADO">ALUGADO</ion-select-option>
+          <ion-select-option value="VENDIDO">VENDIDO</ion-select-option>
+        </ion-select>
       </ion-item>
-  </ion-list>
+      <h6 *ngIf="errorStatus" class="error"> {{message}}</h6>
+      <ion-item>
+        <ion-label color="primary" fixed>Codigo Interno:</ion-label>
+        <ion-input formControlName="codigo" type="text" [(ngModel)]="product.codigo"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Tipos de Imovel</ion-label>
+        <ion-select formControlName="tipo" placeholder="Tipos" [(ngModel)]="product.tipo">
+          <ion-select-option value="Apartamento">Apartamento</ion-select-option>
+          <ion-select-option value="Área lazer">Área lazer</ion-select-option>
+          <ion-select-option value="Casa Condominio">Casa Condominio</ion-select-option>
+          <ion-select-option value="Casa Rua">Casa Rua</ion-select-option>
+          <ion-select-option value="Chacara">Chacara</ion-select-option>
+          <ion-select-option value="Comercial">Comercial</ion-select-option>
+          <ion-select-option value="Terreno Condomínio">Terreno Condomínio</ion-select-option>
+          <ion-select-option value="Terreno Rua">Terreno Rua</ion-select-option>
+          <ion-select-option value="Área Rural">Área Rural</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <h6 *ngIf="errorTipo" class="error"> {{message}}</h6>
+      <ion-item>
+        <ion-label color="primary" fixed> Número de Dormitórios:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.dormitorios"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed> Número de Suítes:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.suites"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Finalidade</ion-label>
+        <ion-select formControlName="finalidade" placeholder="Finalidade" [(ngModel)]="product.finalidade">
+          <ion-select-option value="Venda">Venda</ion-select-option>
+          <ion-select-option value="Locação">Locação</ion-select-option>
+          <ion-select-option value="Venda/Locação">Venda/Locação</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Valor Condominio:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.valor_condominio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Valor IPTU:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.valor_iptu"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Valor do Imovel:</ion-label>
+        <ion-input formControlName="valor" type="number" [(ngModel)]="product.valor"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Endereço do Imovel
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="product.endereco" placeholder="Endereço" color="primary"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="product.bairro" placeholder="Bairro" color="primary"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Área do Imovel
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary" fixed>Área Útil:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.area_util"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Área Total:</ion-label>
+        <ion-input type="number" [(ngModel)]="product.area_total"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Proprietário
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item>
+        <ion-input formControlName="proprietario" type="text" [(ngModel)]="product.proprietario" placeholder="Proprietário"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Telefone:</ion-label>
+        <ion-input formControlName="telefone" type="tel" [(ngModel)]="product.telefone" placeholder="(  )_____-_____"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Aceita Permuta:</ion-label>
+        <ion-select placeholder="Permuta" [(ngModel)]="product.permuta">
+          <ion-select-option value="Sim">Sim</ion-select-option>
+          <ion-select-option value="Não">Não</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Aniversário:</ion-label>
+        <ion-datetime value="2019-01-01" min="1970-01" max="2020" [dayShortNames]="customDayShortNames"
+          displayFormat="DD/MMM/YYYY" monthShortNames="jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, des"
+          [(ngModel)]="product.aniversario"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Canal:</ion-label>
+        <ion-select placeholder="Canal" [(ngModel)]="product.canal">
+          <ion-select-option value="Carteira">Carteira</ion-select-option>
+          <ion-select-option value="OLX">OLX</ion-select-option>
+          <ion-select-option value="Outros">Outros</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Visitas:</ion-label>
+        <ion-select placeholder="Visitas" [(ngModel)]="product.visitas">
+          <ion-select-option value="Aberta">Aberta</ion-select-option>
+          <ion-select-option value="Agendar">Agendar</ion-select-option>
+          <ion-select-option value="Chaves">Chaves</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Itens do Imovel
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">Piscina</ion-label>
+        <ion-checkbox slot="end" [(ngModel)]="product.detalhe_um"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Area Lazer</ion-label>
+        <ion-checkbox slot="end" [(ngModel)]="product.detalhe_dois"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Churrasqueira</ion-label>
+        <ion-checkbox slot="end" [(ngModel)]="product.detalhe_tres"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-textarea rows="6" cols="20" [(ngModel)]="product.observacao" placeholder="Comente sobre o imovel aqui...">
+        </ion-textarea>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Galeria de Imagens
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-button routerLink="/galeria" expand="block" color="warning">
+        Adicionar Imagens
+      </ion-button>
+    </ion-list>
+  </form>
 
 </ion-content>
 
 <ion-footer>
   <div>
-    <ion-button (click)="saveProduct()" expand="block">
-      Salvar Imovel
+    <ion-button expand="block">
+      Salvar Imóvel
     </ion-button>
   </div>
 </ion-footer>

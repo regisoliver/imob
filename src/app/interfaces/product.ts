@@ -22,11 +22,11 @@ export interface Product {
     telefone?: number;
     permuta?: string;
     aniversario?: number;
+    canal?: string;
+    visitas?: string;
     //produto
     picture?: string
-    visitas?: string;
     data_entrada?: number;
-    canal?: string;
     corretor?: string;
     obs?: string;
     detalhe_um?: boolean;

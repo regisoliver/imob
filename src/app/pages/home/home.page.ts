@@ -5,6 +5,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomePage implements OnInit {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     public fs: AngularFirestore,
+    public alertController: AlertController,
   ) {
     this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
@@ -49,6 +51,33 @@ export class HomePage implements OnInit {
   // scroll carregamento da pagina
   toggleInfiniteScroll() {
     //this.infiniteScroll.disabled = !this.infiniteScroll.disabled; --VOLTAR
+  }
+
+  //ion-alert
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deseja sair da Conta ?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            //console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Sair',
+          cssClass: 'secondary',
+          handler: () => {
+            this.logout();
+            //console.log('Confirmado Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   ngOnInit() {
