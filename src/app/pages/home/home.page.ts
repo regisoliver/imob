@@ -17,8 +17,8 @@ export class HomePage implements OnInit {
   public products = new Array<Product>();
   private productsSubscription: Subscription;
 
-  sampleArr=[];
-  resultArr=[];
+  sampleArr = [];
+  resultArr = [];
 
   constructor(
     private productsService: ProductService,
@@ -64,14 +64,12 @@ export class HomePage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            //console.log('Confirm Cancel: blah');
           }
         }, {
           text: 'Sair',
           cssClass: 'secondary',
           handler: () => {
             this.logout();
-            //console.log('Confirmado Ok');
           }
         }
       ]
@@ -87,36 +85,36 @@ export class HomePage implements OnInit {
     this.productsSubscription.unsubscribe();
   }
 
-  
-  search(event){
-    let searchKey:string=event.target.value;
-    let firstLetter=searchKey.toUpperCase();
 
-    if(searchKey.length==0){
-      this.sampleArr=[];
-      this.resultArr=[];
+  search(event) {
+    let searchKey: string = event.target.value;
+    let firstLetter = searchKey.toUpperCase();
+
+    if (searchKey.length == 0) {
+      this.sampleArr = [];
+      this.resultArr = [];
     }
 
-    if(this.sampleArr.length==0){
-      this.fs.collection('Products', ref=>ref.where('tipo','==',firstLetter)).snapshotChanges()
-      .subscribe(data=>{
-        data.forEach(childData => {
-          this.sampleArr.push(childData.payload.doc.data())
-        });
-      })
-    }else{
-      this.resultArr=[];
-      this.sampleArr.forEach(val=>{
-        let name:string=val['tipo'];
-        if(name.toUpperCase().startsWith(searchKey.toUpperCase())){
-          if(true){
+    if (this.sampleArr.length == 0) {
+      this.fs.collection('Products', ref => ref.where('tipo', '==', firstLetter)).snapshotChanges()
+        .subscribe(data => {
+          data.forEach(childData => {
+            this.sampleArr.push(childData.payload.doc.data())
+          });
+        })
+    } else {
+      this.resultArr = [];
+      this.sampleArr.forEach(val => {
+        let name: string = val['tipo'];
+        if (name.toUpperCase().startsWith(searchKey.toUpperCase())) {
+          if (true) {
             this.resultArr.push(val);
           }
         }
       })
     }
   }
-  
+
 
   async logout() {
     await this.presentLoading();

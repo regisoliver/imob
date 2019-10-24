@@ -1,7 +1,8 @@
 {
   "name": "c-imob",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular"
 }

@@ -6,7 +6,7 @@ import { NavController, LoadingController, ToastController } from '@ionic/angula
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { AlertController } from '@ionic/angular';
-import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-details',
@@ -16,11 +16,11 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 export class DetailsPage implements OnInit {
 
   //data-picker product.aniversario
-  customYearValues = [2020, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
+  customYearValues = [2019, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
   customDayShortNames = ['s\u00f8n', 'man', 'tir', 'ons', 'tor', 'fre', 'l\u00f8r'];
   customPickerOptions: any;
 
-  public MyForm: any;
+  public fGroup: FormGroup;
   message = "";
   errorStatus = false;
   errorTipo = false;
@@ -38,33 +38,43 @@ export class DetailsPage implements OnInit {
     private authService: AuthService,
     private toastCtrl: ToastController,
     public alertController: AlertController,
-    formBuilder: FormBuilder
+    public fBuilder: FormBuilder
   ) {
 
     //form do details.page.ts
-    //this.MyForm = formBuilder.group({
-    //  proprietario: ['', Validators.required],
-    //  codigo: ['', Validators.required],
-    //  valor: [, Validators.required],
-    //  tipo: ['', Validators.required],
-    //  finalidade: ['', Validators.required],
-    //  status: ['', Validators.required],
-    //  telefone: [, Validators.required]
-      //tipo: ['', Validators.compose([Validators.minLength(6), Validators.maxLength(20), Validators.required])],
-    //});
-
-    this.MyForm = new FormGroup({
-      proprietario: new FormControl({ value: '' }, Validators.compose([Validators.required])),
-      codigo: new FormControl({ value: '' }, Validators.compose([Validators.required])),
-      valor: new FormControl({ value: 0 }, Validators.compose([Validators.required])),
-      tipo: new FormControl({ value: '' }, Validators.compose([Validators.required])),
-      finalidade: new FormControl({ value: '' }, Validators.compose([Validators.required])),
-      status: new FormControl({ value: '' }, Validators.compose([Validators.required])),
-      telefone: new FormControl({ value: '' }, Validators.compose([Validators.required]))
+    this.fGroup = fBuilder.group({
+      'id': [null],
+      'status': [null, Validators.required],
+      'codigo': [null],
+      'tipo': [null, Validators.required],
+      'dormitorios': [null, Validators.maxLength(2)],
+      'suites': [null, Validators.maxLength(2)],
+      'finalidade': [null, Validators.required],
+      'valor_condominio': [null],
+      'valor_iptu': [null],
+      'valor': [null, Validators.required],
+      'endereco': [null],
+      'bairro': [null],
+      'area_util': [null],
+      'area_total': [null],
+      'proprietario': [null, Validators.required],
+      'telefone': [null, Validators.required],
+      'permuta': [null],
+      'aniversario': [null],
+      'canal': [null],
+      'visitas': [null],
+      'detalhe_um': [null],
+      'detalhe_dois': [null],
+      'detalhe_tres': [null],
+      'observacao': [null, Validators.compose([
+        Validators.maxLength(250)
+      ])],
+      'data_entrada': [null],
+      'corretor': [null]
     });
 
     this.productId = this.activatedRoute.snapshot.params['id'];
-
+    console.log("acaba de receber o ID: ", this.productId); // mostra o ID
     if (this.productId) this.loadProduct();
 
     //data-picker product.aniversario
@@ -83,96 +93,91 @@ export class DetailsPage implements OnInit {
 
   }
 
+  submitForm() {
+    console.log(this.fGroup.value);
+  }
+
   //ion-alert
   async presentAlertConfirm() {
 
-    //validação do FORM
-    let { proprietario,
-          codigo,
-          valor,
-          tipo,
-          finalidade,
-          status,
-          telefone
-         } = this.MyForm.controls;
-
-    if (!this.MyForm.valid) {
-      if (!proprietario.valid) {
-        this.errorStatus = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!status.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!valor.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!codigo.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!tipo.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!finalidade.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-      if (!telefone.valid) {
-        this.errorTipo = true;
-        this.message = "Preencha os Campos Obrigatórios";
-      } else {
-        this.message = "";
-      }
-
-
-    } else {
-      const alert = await this.alertController.create({
-        header: 'Confirmar',
-        message: 'Deseja Salvar o Imóvel ?',
-        buttons: [
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-            cssClass: 'secondary',
-            handler: (blah) => {
-            }
-          }, {
-            text: 'Gravar',
-            handler: () => {
-              this.saveProduct();
-            }
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deseja Salvar o Imóvel ?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
           }
-        ]
-      });
+        }, {
+          text: 'Gravar',
+          handler: () => {
+            this.saveProduct();
+          }
+        }
+      ]
+    });
 
-      await alert.present();
-    }
+    await alert.present();
 
   }
 
-  ngOnInit() { }
+  carregaProductToFGroup(){
+    this.product.id = this.productId;
+    this.product.status = this.fGroup.value['status'];
+    this.product.codigo = this.fGroup.value['codigo'];
+    this.product.tipo = this.fGroup.value['tipo'];
+    this.product.dormitorios = this.fGroup.value['dormitorios'];
+    this.product.suites = this.fGroup.value['suites'];
+    this.product.finalidade = this.fGroup.value['finalidade'];
+    this.product.valor_condominio = this.fGroup.value['valor_condominio'];
+    this.product.valor_iptu = this.fGroup.value['valor_iptu'];
+    this.product.valor = this.fGroup.value['valor'];
+    this.product.endereco = this.fGroup.value['endereco'];
+    this.product.bairro = this.fGroup.value['bairro'];
+    this.product.area_util = this.fGroup.value['area_util'];
+    this.product.area_total = this.fGroup.value['area_total'];
+    this.product.proprietario = this.fGroup.value['proprietario'];
+    this.product.telefone = this.fGroup.value['telefone'];
+    this.product.permuta = this.fGroup.value['permuta'];
+    this.product.aniversario = this.fGroup.value['aniversario'];
+    this.product.canal = this.fGroup.value['canal'];
+    this.product.visitas = this.fGroup.value['visitas'];
+    this.product.detalhe_um = this.fGroup.value['detalhe_um'];
+    this.product.detalhe_dois = this.fGroup.value['detalhe_dois'];
+    this.product.detalhe_tres = this.fGroup.value['detalhe_tres'];
+    this.product.observacao = this.fGroup.value['observacao'];
+  }
+
+  ngOnInit() {
+    setTimeout(() =>{
+      this.fGroup.get('id').setValue(this.productId);
+      this.fGroup.get('status').setValue(this.product.status);
+      this.fGroup.get('codigo').setValue(this.product.codigo);
+      this.fGroup.get('tipo').setValue(this.product.tipo);
+      this.fGroup.get('dormitorios').setValue(this.product.dormitorios);
+      this.fGroup.get('suites').setValue(this.product.suites);
+      this.fGroup.get('finalidade').setValue(this.product.finalidade);
+      this.fGroup.get('valor_condominio').setValue(this.product.valor_condominio);
+      this.fGroup.get('valor_iptu').setValue(this.product.valor_iptu);
+      this.fGroup.get('valor').setValue(this.product.valor);
+      this.fGroup.get('endereco').setValue(this.product.endereco);
+      this.fGroup.get('bairro').setValue(this.product.bairro);
+      this.fGroup.get('area_util').setValue(this.product.area_util);
+      this.fGroup.get('area_total').setValue(this.product.area_total);
+      this.fGroup.get('proprietario').setValue(this.product.proprietario);
+      this.fGroup.get('telefone').setValue(this.product.telefone);
+      this.fGroup.get('permuta').setValue(this.product.permuta);
+      this.fGroup.get('aniversario').setValue(this.product.aniversario);
+      this.fGroup.get('canal').setValue(this.product.canal);
+      this.fGroup.get('visitas').setValue(this.product.visitas);
+      this.fGroup.get('detalhe_um').setValue(this.product.detalhe_um);
+      this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
+      this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
+      this.fGroup.get('observacao').setValue(this.product.observacao);
+    }, 300);
+  }
 
   ngOnDestroy() {
     if (this.productSubscription) this.productSubscription.unsubscribe();
@@ -190,9 +195,13 @@ export class DetailsPage implements OnInit {
     await this.presentLoading();
 
     this.product.corretor = this.authService.getAuth().currentUser.uid;
+    this.fGroup.get('corretor').setValue(this.authService.getAuth().currentUser.uid);
 
     if (this.productId) {
       try {
+        this.carregaProductToFGroup();
+        console.log("Atualização: ", this.product);
+        console.log(this.fGroup.value);
         await this.productService.updateProduct(this.productId, this.product);
         await this.loading.dismiss();
 
@@ -203,8 +212,12 @@ export class DetailsPage implements OnInit {
       }
     } else {
       this.product.data_entrada = new Date().getTime();
+      this.fGroup.get('data_entrada').setValue(new Date().getTime());
 
       try {
+        this.carregaProductToFGroup();
+        console.log("NOVO: ", this.product);
+        console.log(this.fGroup.value);
         await this.productService.addProduct(this.product);
         await this.loading.dismiss();
 

@@ -3,8 +3,11 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Platform } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { Product } from 'src/app/interfaces/product';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-galeria',
@@ -16,12 +19,21 @@ export class GaleriaPage implements OnInit {
   public uploadPercent: Observable<number>;
   public downloadUrl: Observable<string>;
 
+  private productId: string = null;
+  public product: Product = {};
+  private productSubscription: Subscription;
+
   constructor(
     private camera: Camera,
     private platform: Platform,
     private file: File,
-    private afStorage: AngularFireStorage
-  ) { }
+    private afStorage: AngularFireStorage,
+    private activatedRoute: ActivatedRoute,
+    private productService: ProductService
+  ) { 
+    this.productId = this.activatedRoute.snapshot.params['id'];
+    console.log('ID: ', this.productId);
+  }
 
   ngOnInit() {
   }
@@ -36,13 +48,16 @@ export class GaleriaPage implements OnInit {
 
     try{
       const fileUrl: string = await this.camera.getPicture(options);
+      console.log(fileUrl);
 
       let file: string;
 
       if(this.platform.is('ios')){
         file = fileUrl.split('/').pop();
+        console.log(this.file);
       } else {
         file = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.indexOf('?'));
+        console.log(this.file);
       }
 
       const path: string = fileUrl.substring(0, fileUrl.lastIndexOf('/'));
@@ -66,6 +81,14 @@ export class GaleriaPage implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => this.downloadUrl = ref.getDownloadURL())
     ).subscribe();
+    
+  }
+
+  loadProduct() {
+    this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
+      this.product = data;
+      console.log(this.product);
+    });
   }
 
 }
