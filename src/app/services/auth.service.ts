@@ -9,6 +9,7 @@ import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/fire
 export class AuthService {
 
   private usersCollection: AngularFirestoreCollection<User>;
+  private user: User;
 
   constructor(private afa: AngularFireAuth, private afs: AngularFirestore) {
     this.usersCollection = this.afs.collection<User>('Users');
@@ -28,6 +29,17 @@ export class AuthService {
 
   getAuth() {
     return this.afa.auth;
+  }
+
+  getUID(){
+    if(!this.user){
+      if(this.afa.auth.currentUser){
+        const user = this.afa.auth.currentUser
+        //this.setUser({
+
+        //})
+      }
+    }
   }
 
 }

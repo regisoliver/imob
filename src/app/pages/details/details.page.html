@@ -174,7 +174,13 @@
       <ion-button [routerLink]="['/galeria', product.id]" expand="block" color="warning">
         Adicionar Imagens
       </ion-button>
+      <ion-button [routerLink]="['/galeria', product.id]" expand="block" color="warning">
+        Adicionar Imagens Novo
+      </ion-button>
+      <ion-button shape="round" color="primary" (click)="uploadFile()" *ngIf="!imageURL"
+      fill="outline">Adicionar Imagens Novo</ion-button>
     </ion-list>
+    
   </form>
 
 </ion-content>

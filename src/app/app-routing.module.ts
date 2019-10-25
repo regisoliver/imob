@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'details/:id', loadChildren: './pages/details/details.module#DetailsPageModule', canActivate: [AuthGuard] },
   { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule', canActivate: [AuthGuard] },
   { path: 'galeria', loadChildren: './pages/galeria/galeria.module#GaleriaPageModule', canActivate: [AuthGuard] },
-  { path: 'galeria/:id', loadChildren: './pages/galeria/galeria.module#GaleriaPageModule', canActivate: [AuthGuard] }
+  { path: 'galeria/:id', loadChildren: './pages/galeria/galeria.module#GaleriaPageModule', canActivate: [AuthGuard] },
+  { path: 'images', loadChildren: './pages/images/images.module#ImagesPageModule' }
 ];
 
 @NgModule({

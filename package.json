@@ -42,6 +42,7 @@
     "cordova-plugin-webview": "0.0.1",
     "cordova-sqlite-storage": "^3.4.0",
     "core-js": "^2.5.4",
+    "emulate": "1.0.2",
     "firebase": "^6.6.2",
     "ionic-selectable": "^4.4.0",
     "rxjs": "~6.5.1",
