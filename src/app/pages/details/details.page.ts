@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Http } from '@angular/http'
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/interfaces/product';
@@ -7,6 +8,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-details',
@@ -20,6 +23,24 @@ export class DetailsPage implements OnInit {
   customDayShortNames = ['s\u00f8n', 'man', 'tir', 'ons', 'tor', 'fre', 'l\u00f8r'];
   customPickerOptions: any;
 
+  //variaveis do Upload Images
+  imageURL: string
+	desc: string
+  noFace: boolean = false
+  
+  scaleCrop: string = '-/scale_crop/200x200'
+	
+	effects = {
+		effect1: '',
+		effect2: '-/exposure/50/-/saturation/50/-/warmth/-30/',
+		effect3: '-/filter/vevera/150/',
+		effect4: '-/filter/carris/150/',
+		effect5: '-/filter/misiara/150/'
+  }
+  activeEffect: string = this.effects.effect1
+  
+  @ViewChild('fileButton', {static: false}) fileButton
+
   public fGroup: FormGroup;
   message = "";
   errorStatus = false;
@@ -31,6 +52,7 @@ export class DetailsPage implements OnInit {
   private productSubscription: Subscription;
 
   constructor(
+    public http: Http,
     private productService: ProductService,
     private activatedRoute: ActivatedRoute,
     private navCtrl: NavController,
@@ -38,7 +60,9 @@ export class DetailsPage implements OnInit {
     private authService: AuthService,
     private toastCtrl: ToastController,
     public alertController: AlertController,
-    public fBuilder: FormBuilder
+    public fBuilder: FormBuilder,
+    public afs: AngularFirestore,
+    public auth: AuthService
   ) {
 
     //form do details.page.ts
@@ -93,6 +117,70 @@ export class DetailsPage implements OnInit {
 
   }
 
+  async createPost() {
+		await this.presentLoading();
+
+		const image = this.product.imageURL
+		const activeEffect = this.activeEffect
+		const desc = this.desc
+
+		this.afs.doc(`users/${this.auth.getUID()}`).update({
+			posts: firestore.FieldValue.arrayUnion(`${image}/${activeEffect}`)
+		})
+
+		this.afs.doc(`posts/${image}`).set({
+			desc,
+			author: this.auth.getAuth.name,
+			likes: [],
+			effect: activeEffect
+		})
+		
+		this.loading.dismiss();
+		this.imageURL = ""
+		this.desc = ""
+
+		const alert = await this.alertController.create({
+			header: 'Done',
+			message: 'Your post was created!',
+			buttons: ['Cool!']
+		})
+
+		await alert.present()
+	}
+
+  //metodos do Upload Images
+	setSelected(effect: string) {
+		this.activeEffect = this.effects[effect]
+	}
+
+	uploadFile() {
+		this.fileButton.nativeElement.click()
+	}
+
+	fileChanged(event) {
+		
+		this.presentLoading();
+
+		const files = event.target.files
+		
+		const data = new FormData()
+		data.append('file', files[0])
+		data.append('UPLOADCARE_STORE', '1')
+		data.append('UPLOADCARE_PUB_KEY', 'fd95da9399e52e4f97e0')
+		
+		this.http.post('https://upload.uploadcare.com/base/', data)
+		.subscribe(event => {
+			console.log(event)
+			this.product.imageURL = event.json().file
+			this.loading.dismiss();
+			this.http.get(`https://ucarecdn.com/${this.product.imageURL}/detect_faces/`)
+			.subscribe(event => {
+				this.noFace = event.json().faces == 0
+			})
+		})
+	}
+
+  //metodo de teste do form
   submitForm() {
     console.log(this.fGroup.value);
   }

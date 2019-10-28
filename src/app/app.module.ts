@@ -19,6 +19,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -38,7 +39,8 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
     AngularFirestoreModule,
     IonicSelectableModule,
     IonicStorageModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    HttpModule
   ],
   providers: [
     StatusBar,
