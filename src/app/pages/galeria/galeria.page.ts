@@ -73,6 +73,8 @@ export class GaleriaPage implements OnInit {
   }
 
   uploadPicture(blob: Blob){
+    console.log(blob);
+    
     const ref = this.afStorage.ref('images/ionic.jpg');
     const task = ref.put(blob);
 

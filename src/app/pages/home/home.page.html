@@ -32,7 +32,8 @@
       <ion-item button [routerLink]="['/details', product.id]">
         <ion-card>
           <ion-card-header>
-            <img [src]="product.picture">
+            <!--<img [src]="product.picture">-->
+            <img [src]="product.imageURL[0]">
             <ion-card-subtitle color="dark">Status: {{product.status}}</ion-card-subtitle>
             <ion-card-title color="primary">{{product.tipo}}</ion-card-title>
           </ion-card-header>

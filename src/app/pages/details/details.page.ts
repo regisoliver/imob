@@ -150,14 +150,20 @@ export class DetailsPage implements OnInit {
 
   //metodos do Upload Images
 	setSelected(effect: string) {
+    console.log("fez o Selected")
+    console.log(effect)
 		this.activeEffect = this.effects[effect]
 	}
 
 	uploadFile() {
+    console.log("fez o upload")
+    console.log(this.product.imageURL)
 		this.fileButton.nativeElement.click()
 	}
 
 	fileChanged(event) {
+    console.log("fez o fileChanged")
+    console.log(event)
 		
 		this.presentLoading();
 
