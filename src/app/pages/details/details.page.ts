@@ -3,13 +3,17 @@ import { Http } from '@angular/http'
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/interfaces/product';
-import { NavController, LoadingController, ToastController } from '@ionic/angular';
+import { NavController, LoadingController, ToastController, Platform } from '@ionic/angular';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-details',
@@ -27,6 +31,8 @@ export class DetailsPage implements OnInit {
   imageURL: string
 	desc: string
   noFace: boolean = false
+
+  public downloadUrl: Observable<string>;
   
   scaleCrop: string = '-/scale_crop/200x200'
 	
@@ -62,7 +68,11 @@ export class DetailsPage implements OnInit {
     public alertController: AlertController,
     public fBuilder: FormBuilder,
     public afs: AngularFirestore,
-    public auth: AuthService
+    public auth: AuthService,
+    private camera: Camera,
+    private platform: Platform,
+    private file: File,
+    private afStorage: AngularFireStorage
   ) {
 
     //form do details.page.ts
@@ -194,6 +204,8 @@ export class DetailsPage implements OnInit {
   //ion-alert
   async presentAlertConfirm() {
 
+    console.log(this.product.imageURL);
+
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: 'Deseja Salvar o Imóvel ?',
@@ -216,6 +228,63 @@ export class DetailsPage implements OnInit {
     await alert.present();
 
   }
+
+  // Função Firebase Storage Imagens
+  async openGalery(){
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      correctOrientation: true
+    };
+
+    try{
+      const fileUrl: string = await this.camera.getPicture(options);
+      console.log("OPEN GALERY - fileUrl: ", fileUrl);
+      console.log("OPEN GALERY - destinationType: ", options.destinationType);
+
+      let file: string;
+
+      if(this.platform.is('ios')){
+        file = fileUrl.split('/').pop();
+        console.log(this.file);
+      } else {
+        file = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.indexOf('?'));
+        console.log(this.file);
+      }
+
+      const path: string = fileUrl.substring(0, fileUrl.lastIndexOf('/'));
+
+      const buffer: ArrayBuffer = await this.file.readAsArrayBuffer(path, file);
+      const blob: Blob = new Blob([buffer]);
+      console.log("OPEN GALERY - blob: ", blob);
+      //const blob: Blob = new Blob([buffer], { type: 'image/jpeg' });
+
+      console.log("OPEN GALERY - Product.imageURL: ", this.product.imageURL);
+      this.fGroup.get('imageURL').setValue(this.product.imageURL);
+      console.log("OPEN GALERY - FGROUP: ", this.fGroup.get('imageURL'));
+
+      //this.uploadPicture(blob);
+    }catch(error){
+      console.error(error);
+    }
+
+  }
+
+  uploadPicture(blob: Blob){
+    console.log(blob);
+    
+    const ref = this.afStorage.ref('imob/ionic.jpg');
+    const task = ref.put(blob);
+
+    //this.uploadPercent = task.percentageChanges();
+
+    task.snapshotChanges().pipe(
+      finalize(() => this.downloadUrl = ref.getDownloadURL())
+    ).subscribe();
+    
+  }
+
 
   carregaProductToFGroup(){
     this.product.id = this.productId;
@@ -290,6 +359,9 @@ export class DetailsPage implements OnInit {
 
     this.product.corretor = this.authService.getAuth().currentUser.uid;
     this.fGroup.get('corretor').setValue(this.authService.getAuth().currentUser.uid);
+    this.fGroup.get('imageURL').setValue(this.product.imageURL);
+
+    console.log(this.fGroup.get('imageURL'));
 
     if (this.productId) {
       try {

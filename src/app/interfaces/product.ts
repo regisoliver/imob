@@ -32,6 +32,5 @@ export interface Product {
     detalhe_um?: boolean;
     detalhe_dois?: boolean;
     detalhe_tres?: boolean;
-    image?: Array<string>;
     imageURL?: Array<string>;
 }

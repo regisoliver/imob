@@ -1,9 +1,10 @@
-export JAVA_HOME=$/usr/lib/jvm/java-8-oracle
-
-export PATH=${JAVA_HOME}/bin:$PATH
-
-export ANDROID_HOME=/home/regisoliver/Documentos/android-studio/tools
-
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_222
+export PATH=$PATH:$JAVA_HOME/bin
+export ANDROID_HOME=/home/regisoliver/Android/Sdk
+export ANDROID_SDK_ROOT=/home/regisoliver/Android/Sdk
 export PATH=$ANDROID_HOME/platform-tools:$PATH
-
-export PATH=$ANDROID_HOME/tools:$PATH
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/build-tools
+export PATH=$PATH:/home/regisoliver/android-studio/gradle/gradle-4.4/bin
+export PATH=$PATH:/opt/gradle/gradle-5.6.3/bin

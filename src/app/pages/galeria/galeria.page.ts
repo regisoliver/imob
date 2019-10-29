@@ -49,6 +49,7 @@ export class GaleriaPage implements OnInit {
     try{
       const fileUrl: string = await this.camera.getPicture(options);
       console.log(fileUrl);
+      console.log(options.destinationType);
 
       let file: string;
 
