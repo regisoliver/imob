@@ -14,6 +14,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { firestore } from 'firebase/app';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { File } from '@ionic-native/file/ngx';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-details',
@@ -29,23 +31,25 @@ export class DetailsPage implements OnInit {
 
   //variaveis do Upload Images
   imageURL: string
-	desc: string
+  desc: string
   noFace: boolean = false
+  imagemtotal: string
+  private fotoTemp: string[] = [];
 
   public downloadUrl: Observable<string>;
-  
+
   scaleCrop: string = '-/scale_crop/200x200'
-	
-	effects = {
-		effect1: '',
-		effect2: '-/exposure/50/-/saturation/50/-/warmth/-30/',
-		effect3: '-/filter/vevera/150/',
-		effect4: '-/filter/carris/150/',
-		effect5: '-/filter/misiara/150/'
+
+  effects = {
+    effect1: '',
+    effect2: '-/exposure/50/-/saturation/50/-/warmth/-30/',
+    effect3: '-/filter/vevera/150/',
+    effect4: '-/filter/carris/150/',
+    effect5: '-/filter/misiara/150/'
   }
   activeEffect: string = this.effects.effect1
-  
-  @ViewChild('fileButton', {static: false}) fileButton
+
+  @ViewChild('fileButton', { static: false }) fileButton
 
   public fGroup: FormGroup;
   message = "";
@@ -72,8 +76,9 @@ export class DetailsPage implements OnInit {
     private camera: Camera,
     private platform: Platform,
     private file: File,
-    private afStorage: AngularFireStorage
+    private afStorage: AngularFireStorage,
   ) {
+    //this.product = {};
 
     //form do details.page.ts
     this.fGroup = fBuilder.group({
@@ -104,7 +109,8 @@ export class DetailsPage implements OnInit {
         Validators.maxLength(250)
       ])],
       'data_entrada': [null],
-      'corretor': [null]
+      'corretor': [null],
+      'images': [null]
     });
 
     this.productId = this.activatedRoute.snapshot.params['id'];
@@ -127,84 +133,74 @@ export class DetailsPage implements OnInit {
 
   }
 
-  async createPost() {
-		await this.presentLoading();
-
-		const image = this.product.imageURL
-		const activeEffect = this.activeEffect
-		const desc = this.desc
-
-		this.afs.doc(`users/${this.auth.getUID()}`).update({
-			posts: firestore.FieldValue.arrayUnion(`${image}/${activeEffect}`)
-		})
-
-		this.afs.doc(`posts/${image}`).set({
-			desc,
-			author: this.auth.getAuth.name,
-			likes: [],
-			effect: activeEffect
-		})
-		
-		this.loading.dismiss();
-		this.imageURL = ""
-		this.desc = ""
-
-		const alert = await this.alertController.create({
-			header: 'Done',
-			message: 'Your post was created!',
-			buttons: ['Cool!']
-		})
-
-		await alert.present()
-	}
-
   //metodos do Upload Images
-	setSelected(effect: string) {
+  setSelected(effect: string) {
     console.log("fez o Selected")
     console.log(effect)
-		this.activeEffect = this.effects[effect]
-	}
+    this.activeEffect = this.effects[effect]
+  }
 
-	uploadFile() {
+  uploadFile() {
     console.log("fez o upload")
-    console.log(this.product.imageURL)
-		this.fileButton.nativeElement.click()
-	}
+    this.ngOnInit();
+    console.log("upload - imageURL: ", this.product.images)
+    console.log("fGroupd: ", this.fGroup);
+    this.fileButton.nativeElement.click()
+  }
 
-	fileChanged(event) {
+  fileChanged(event) {
     console.log("fez o fileChanged")
     console.log(event)
-		
-		this.presentLoading();
 
-		const files = event.target.files
-		
-		const data = new FormData()
-		data.append('file', files[0])
-		data.append('UPLOADCARE_STORE', '1')
-		data.append('UPLOADCARE_PUB_KEY', 'fd95da9399e52e4f97e0')
-		
-		this.http.post('https://upload.uploadcare.com/base/', data)
-		.subscribe(event => {
-			console.log(event)
-			this.product.imageURL = event.json().file
-			this.loading.dismiss();
-			this.http.get(`https://ucarecdn.com/${this.product.imageURL}/detect_faces/`)
-			.subscribe(event => {
-				this.noFace = event.json().faces == 0
-			})
-		})
-	}
+    this.presentLoading();
+
+    const files = event.target.files
+    console.log("event target name: ", files[0].name);
+
+    const data2 = new String;
+
+    const data = new FormData()
+    data.append('file', files[0])
+    data.append('UPLOADCARE_STORE', '1')
+    data.append('UPLOADCARE_PUB_KEY', 'fd95da9399e52e4f97e0')
+
+    this.http.post('https://upload.uploadcare.com/base/', data)
+      .subscribe(event => {
+        this.imageURL = event.json().file
+        console.log("Subscribe mostrando imageURL: ", this.imageURL);
+
+        this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
+        console.log("imagemtotal: ", this.imagemtotal);
+        this.fGroup.get('images').setValue(this.imagemtotal);
+        console.log("fgroup images: ", this.fGroup.get('images'));
+
+        //this.product.images = [];
+        //this.product.images.push(this.imagemtotal);
+        //this.fotoTemp.push(this.imagemtotal);
+        this.product.images.push(this.imagemtotal)
+        console.log("this.product.images com push: ", this.product.images);
+        this.carregaProductToFGroup();
+
+        this.loading.dismiss();
+        this.http.get(`https://ucarecdn.com/${this.imageURL}/detect_faces/`)
+          .subscribe(event => {
+            this.noFace = event.json().faces == 0
+          })
+      })
+  }
 
   //metodo de teste do form
   submitForm() {
     console.log(this.fGroup.value);
+    console.log(this.product.images);
+    console.log(this.fotoTemp);
+    this.product.images.pop();
   }
 
   //ion-alert
   async presentAlertConfirm() {
 
-    console.log(this.product.imageURL);
+    console.log(this.product.images);
 
     const alert = await this.alertController.create({
       header: 'Confirmar',
@@ -229,51 +225,9 @@ export class DetailsPage implements OnInit {
 
   }
 
-  // Função Firebase Storage Imagens
-  async openGalery(){
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      correctOrientation: true
-    };
-
-    try{
-      const fileUrl: string = await this.camera.getPicture(options);
-      console.log("OPEN GALERY - fileUrl: ", fileUrl);
-      console.log("OPEN GALERY - destinationType: ", options.destinationType);
-
-      let file: string;
-
-      if(this.platform.is('ios')){
-        file = fileUrl.split('/').pop();
-        console.log(this.file);
-      } else {
-        file = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.indexOf('?'));
-        console.log(this.file);
-      }
-
-      const path: string = fileUrl.substring(0, fileUrl.lastIndexOf('/'));
-
-      const buffer: ArrayBuffer = await this.file.readAsArrayBuffer(path, file);
-      const blob: Blob = new Blob([buffer]);
-      console.log("OPEN GALERY - blob: ", blob);
-      //const blob: Blob = new Blob([buffer], { type: 'image/jpeg' });
-
-      console.log("OPEN GALERY - Product.imageURL: ", this.product.imageURL);
-      this.fGroup.get('imageURL').setValue(this.product.imageURL);
-      console.log("OPEN GALERY - FGROUP: ", this.fGroup.get('imageURL'));
-
-      //this.uploadPicture(blob);
-    }catch(error){
-      console.error(error);
-    }
-
-  }
-
-  uploadPicture(blob: Blob){
+  uploadPicture(blob: Blob) {
     console.log(blob);
-    
+
     const ref = this.afStorage.ref('imob/ionic.jpg');
     const task = ref.put(blob);
 
@@ -282,11 +236,11 @@ export class DetailsPage implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => this.downloadUrl = ref.getDownloadURL())
     ).subscribe();
-    
+
   }
 
 
-  carregaProductToFGroup(){
+  carregaProductToFGroup() {
     this.product.id = this.productId;
     this.product.status = this.fGroup.value['status'];
     this.product.codigo = this.fGroup.value['codigo'];
@@ -311,10 +265,11 @@ export class DetailsPage implements OnInit {
     this.product.detalhe_dois = this.fGroup.value['detalhe_dois'];
     this.product.detalhe_tres = this.fGroup.value['detalhe_tres'];
     this.product.observacao = this.fGroup.value['observacao'];
+    //this.product.images = this.fGroup.value['images'];
   }
 
   ngOnInit() {
-    setTimeout(() =>{
+    setTimeout(() => {
       this.fGroup.get('id').setValue(this.productId);
       this.fGroup.get('status').setValue(this.product.status);
       this.fGroup.get('codigo').setValue(this.product.codigo);
@@ -339,6 +294,7 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
       this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
       this.fGroup.get('observacao').setValue(this.product.observacao);
+      //this.fGroup.get('images').setValue(this.product.images);
     }, 300);
   }
 
@@ -359,9 +315,9 @@ export class DetailsPage implements OnInit {
 
     this.product.corretor = this.authService.getAuth().currentUser.uid;
     this.fGroup.get('corretor').setValue(this.authService.getAuth().currentUser.uid);
-    this.fGroup.get('imageURL').setValue(this.product.imageURL);
+    this.fGroup.get('images').setValue(this.product.images);
 
-    console.log(this.fGroup.get('imageURL'));
+    console.log(this.fGroup.get('images'));
 
     if (this.productId) {
       try {
