@@ -171,10 +171,9 @@
       </ion-label>
     </ion-item-divider>
     <ion-list>
-      <ion-button shape="round" color="primary" (click)="uploadFile()" fill="outline">Upload
-        File
+      <ion-button shape="round" color="primary" (click)="uploadFile()" fill="outline" expand="block">
+        Adicionar Imagem
       </ion-button>
-      </ion-item>
       <ion-item>
         <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton />
       </ion-item>
@@ -194,12 +193,8 @@
               </ion-item>
             </ion-list>
           </div>
-          <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="deleteProduct(product.id)">
-              <ion-icon slot="top" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
         </ion-item>
+      </ion-item>
     </ion-list>
 
   </form>
@@ -207,8 +202,8 @@
 </ion-content>
 
 <ion-footer>
-  <div>
-    <ion-button expand=" block" (click)="submitForm()" [disabled]="!fGroup.valid">
+  <div class="centralizado">
+    <ion-button expand=" block" (click)="presentAlertConfirm()" [disabled]="!fGroup.valid" expand="block">
       Salvar Imóvel
     </ion-button>
   </div>

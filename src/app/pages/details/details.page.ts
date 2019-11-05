@@ -36,6 +36,7 @@ export class DetailsPage implements OnInit {
   imagemtotal: string
   private fotoTemp: string[] = [];
 
+
   public downloadUrl: Observable<string>;
 
   scaleCrop: string = '-/scale_crop/200x200'
@@ -78,7 +79,6 @@ export class DetailsPage implements OnInit {
     private file: File,
     private afStorage: AngularFireStorage,
   ) {
-    //this.product = {};
 
     //form do details.page.ts
     this.fGroup = fBuilder.group({
@@ -174,9 +174,9 @@ export class DetailsPage implements OnInit {
         this.fGroup.get('images').setValue(this.imagemtotal);
         console.log("fgroup images: ", this.fGroup.get('images'));
 
-        //this.product.images = [];
-        //this.product.images.push(this.imagemtotal);
-        //this.fotoTemp.push(this.imagemtotal);
+        if (this.product.images == null) {
+          this.product.images = [];
+        }
         this.product.images.push(this.imagemtotal)
         console.log("this.product.images com push: ", this.product.images);
         this.carregaProductToFGroup();
@@ -239,6 +239,39 @@ export class DetailsPage implements OnInit {
 
   }
 
+  criaConstanteProducts(){
+    const prod: Product = {
+      id: this.product.id,
+      status: this.product.status,
+      codigo: this.product.codigo,
+      tipo: this.product.tipo,
+      dormitorios: this.product.dormitorios,
+      suites: this.product.suites,
+      finalidade: this.product.finalidade,
+      valor_condominio: this.product.valor_condominio,
+      valor_iptu: this.product.valor_iptu,
+      valor: this.product.valor,
+      endereco: this.product.endereco,
+      bairro: this.product.bairro,
+      area_util: this.product.area_util,
+      area_total: this.product.area_total,
+      proprietario: this.product.proprietario,
+      telefone: this.product.telefone,
+      permuta: this.product.permuta,
+      aniversario: this.product.aniversario,
+      canal: this.product.canal,
+      visitas: this.product.visitas,
+      detalhe_um: this.product.detalhe_um,
+      detalhe_dois: this.product.detalhe_dois,
+      detalhe_tres: this.product.detalhe_tres,
+      observacao: this.product.observacao,
+      images: this.product.images,
+      corretor: this.product.corretor,
+      data_entrada: this.product.data_entrada
+    }
+
+    return prod;
+  }
 
   carregaProductToFGroup() {
     this.product.id = this.productId;
@@ -317,13 +350,20 @@ export class DetailsPage implements OnInit {
     this.fGroup.get('corretor').setValue(this.authService.getAuth().currentUser.uid);
     this.fGroup.get('images').setValue(this.product.images);
 
+    //const budgets = arrayOfBudget.map((obj)=> {return Object.assign({}, obj)});
+
     console.log(this.fGroup.get('images'));
 
     if (this.productId) {
       try {
         this.carregaProductToFGroup();
+        const imagens = this.product.images.map((obj) => { return Object.assign({}, obj) });
+        this.product.images = imagens;
+        console.log("MAAP: ", imagens);
         console.log("Atualização: ", this.product);
         console.log(this.fGroup.value);
+
+        this.criaConstanteProducts();
         await this.productService.updateProduct(this.productId, this.product);
         await this.loading.dismiss();
 
@@ -338,14 +378,22 @@ export class DetailsPage implements OnInit {
 
       try {
         this.carregaProductToFGroup();
+        const imagens = this.product.images.map((obj) => { return Object.assign({}, obj) });
+        this.product.images = imagens;
+        console.log("MAAP: ", imagens);
         console.log("NOVO: ", this.product);
         console.log(this.fGroup.value);
-        await this.productService.addProduct(this.product);
+
+        const produto = this.criaConstanteProducts();
+        console.log("PROD: ", produto);
+
+        await this.productService.addProduct(produto);
         await this.loading.dismiss();
 
         this.navCtrl.navigateBack('/home');
       } catch (error) {
         this.presentToast('Erro ao tentar salvar');
+        console.log(error)
         this.loading.dismiss();
       }
     }
