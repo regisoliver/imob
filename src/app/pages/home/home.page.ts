@@ -32,6 +32,7 @@ export class HomePage implements OnInit {
       this.products = data;
     });
   }
+
   //@ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll; -- VOLTAR
 
   // evento carregamento da pagina

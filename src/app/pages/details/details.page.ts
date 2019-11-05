@@ -4,18 +4,12 @@ import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/interfaces/product';
 import { NavController, LoadingController, ToastController, Platform } from '@ionic/angular';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { firestore } from 'firebase/app';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { File } from '@ionic-native/file/ngx';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-details',
@@ -34,10 +28,6 @@ export class DetailsPage implements OnInit {
   desc: string
   noFace: boolean = false
   imagemtotal: string
-  private fotoTemp: string[] = [];
-
-
-  public downloadUrl: Observable<string>;
 
   scaleCrop: string = '-/scale_crop/200x200'
 
@@ -74,9 +64,6 @@ export class DetailsPage implements OnInit {
     public fBuilder: FormBuilder,
     public afs: AngularFirestore,
     public auth: AuthService,
-    private camera: Camera,
-    private platform: Platform,
-    private file: File,
     private afStorage: AngularFireStorage,
   ) {
 
@@ -143,8 +130,6 @@ export class DetailsPage implements OnInit {
   uploadFile() {
     console.log("fez o upload")
     this.ngOnInit();
-    console.log("upload - imageURL: ", this.product.images)
-    console.log("fGroupd: ", this.fGroup);
     this.fileButton.nativeElement.click()
   }
 
@@ -171,8 +156,6 @@ export class DetailsPage implements OnInit {
 
         this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
         console.log("imagemtotal: ", this.imagemtotal);
-        this.fGroup.get('images').setValue(this.imagemtotal);
-        console.log("fgroup images: ", this.fGroup.get('images'));
 
         if (this.product.images == null) {
           this.product.images = [];
@@ -182,26 +165,23 @@ export class DetailsPage implements OnInit {
         this.carregaProductToFGroup();
 
         this.loading.dismiss();
+        /*
         this.http.get(`https://ucarecdn.com/${this.imageURL}/detect_faces/`)
           .subscribe(event => {
             this.noFace = event.json().faces == 0
           })
+          */
       })
   }
 
   //metodo de teste do form
   submitForm() {
     console.log(this.fGroup.value);
-    console.log(this.product.images);
-    console.log(this.fotoTemp);
     this.product.images.pop();
   }
 
   //ion-alert
   async presentAlertConfirm() {
-
-    console.log(this.product.images);
-
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: 'Deseja Salvar o Imóvel ?',
@@ -225,23 +205,9 @@ export class DetailsPage implements OnInit {
 
   }
 
-  uploadPicture(blob: Blob) {
-    console.log(blob);
-
-    const ref = this.afStorage.ref('imob/ionic.jpg');
-    const task = ref.put(blob);
-
-    //this.uploadPercent = task.percentageChanges();
-
-    task.snapshotChanges().pipe(
-      finalize(() => this.downloadUrl = ref.getDownloadURL())
-    ).subscribe();
-
-  }
-
-  criaConstanteProducts(){
+  criaConstanteProducts() {
     const prod: Product = {
-      id: this.product.id,
+      //id: this.product.id,
       status: this.product.status,
       codigo: this.product.codigo,
       tipo: this.product.tipo,
@@ -270,11 +236,17 @@ export class DetailsPage implements OnInit {
       data_entrada: this.product.data_entrada
     }
 
+    Object.keys(prod).forEach(key => {
+      if (prod[key] === undefined) {
+        prod[key] = null;
+      }
+    });
+
     return prod;
   }
 
   carregaProductToFGroup() {
-    this.product.id = this.productId;
+    //this.product.id = this.productId;
     this.product.status = this.fGroup.value['status'];
     this.product.codigo = this.fGroup.value['codigo'];
     this.product.tipo = this.fGroup.value['tipo'];
@@ -298,12 +270,12 @@ export class DetailsPage implements OnInit {
     this.product.detalhe_dois = this.fGroup.value['detalhe_dois'];
     this.product.detalhe_tres = this.fGroup.value['detalhe_tres'];
     this.product.observacao = this.fGroup.value['observacao'];
-    //this.product.images = this.fGroup.value['images'];
+    this.product.corretor = this.authService.getAuth().currentUser.uid;
   }
 
   ngOnInit() {
     setTimeout(() => {
-      this.fGroup.get('id').setValue(this.productId);
+      //this.fGroup.get('id').setValue(this.productId);
       this.fGroup.get('status').setValue(this.product.status);
       this.fGroup.get('codigo').setValue(this.product.codigo);
       this.fGroup.get('tipo').setValue(this.product.tipo);
@@ -327,7 +299,6 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
       this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
       this.fGroup.get('observacao').setValue(this.product.observacao);
-      //this.fGroup.get('images').setValue(this.product.images);
     }, 300);
   }
 
@@ -340,31 +311,23 @@ export class DetailsPage implements OnInit {
     this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
       this.product = data;
     });
+
+    //this.product.images = JSON.parse(this.product.foto);
+    //console.log("load images: ", this.product.images);
   }
 
 
   async saveProduct() {
     await this.presentLoading();
 
-    this.product.corretor = this.authService.getAuth().currentUser.uid;
-    this.fGroup.get('corretor').setValue(this.authService.getAuth().currentUser.uid);
-    this.fGroup.get('images').setValue(this.product.images);
-
-    //const budgets = arrayOfBudget.map((obj)=> {return Object.assign({}, obj)});
-
-    console.log(this.fGroup.get('images'));
-
     if (this.productId) {
       try {
         this.carregaProductToFGroup();
-        const imagens = this.product.images.map((obj) => { return Object.assign({}, obj) });
-        this.product.images = imagens;
-        console.log("MAAP: ", imagens);
-        console.log("Atualização: ", this.product);
-        console.log(this.fGroup.value);
+        //this.product.foto = JSON.stringify(this.product.images);
 
-        this.criaConstanteProducts();
-        await this.productService.updateProduct(this.productId, this.product);
+        //this.product.images = [];
+        const produto = this.criaConstanteProducts();
+        await this.productService.updateProduct(this.productId, produto);
         await this.loading.dismiss();
 
         this.navCtrl.navigateBack('/home');
@@ -374,16 +337,13 @@ export class DetailsPage implements OnInit {
       }
     } else {
       this.product.data_entrada = new Date().getTime();
-      this.fGroup.get('data_entrada').setValue(new Date().getTime());
 
       try {
         this.carregaProductToFGroup();
-        const imagens = this.product.images.map((obj) => { return Object.assign({}, obj) });
-        this.product.images = imagens;
-        console.log("MAAP: ", imagens);
-        console.log("NOVO: ", this.product);
-        console.log(this.fGroup.value);
+        //this.product.foto = JSON.stringify(this.product.images);
+        //console.log("json: ", this.product.foto);
 
+        //this.product.images = [];
         const produto = this.criaConstanteProducts();
         console.log("PROD: ", produto);
 

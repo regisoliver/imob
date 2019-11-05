@@ -185,7 +185,7 @@
               <ion-item *ngFor="let foto of product.images">
                 <ion-row>
                   <ion-col size="12">
-                    <ion-img src="{{ foto }}" [(ngModel)]="product.images" *ngIf="product.images"
+                    <ion-img src="{{ foto }}" name="images" [(ngModel)]="product.images" *ngIf="product.images"
                       [ngModelOptions]="{standalone: true}">
                     </ion-img>
                   </ion-col>
