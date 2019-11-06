@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Product } from '../interfaces/product';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
+
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,10 @@ import { map } from 'rxjs/operators';
 export class ProductService {
   private productsCollection: AngularFirestoreCollection<Product>;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(
+    private afs: AngularFirestore,
+    private http: HttpClient
+  ) {
     this.productsCollection = this.afs.collection<Product>('Products');
   }
 
@@ -24,6 +29,7 @@ export class ProductService {
         });
       })
     )
+    
   }
 
   addProduct(product: Product) {

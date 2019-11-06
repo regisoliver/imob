@@ -17,8 +17,9 @@ export class HomePage implements OnInit {
   public products = new Array<Product>();
   private productsSubscription: Subscription;
 
-  sampleArr = [];
-  resultArr = [];
+  //search
+  public prodList: Product[];
+  public loadedProdList: Product[];
 
   constructor(
     private productsService: ProductService,
@@ -33,20 +34,21 @@ export class HomePage implements OnInit {
     });
   }
 
+  carregaProdutoOriginal(){
+    this.productsSubscription = this.productsService.getProducts().subscribe(data => {
+      this.products = data;
+    });
+  }
+
   //@ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll; -- VOLTAR
 
   // evento carregamento da pagina
   loadData(event) {
     setTimeout(() => {
       console.log('Done');
+      this.initializeItems();
       event.target.complete();
-
-      // App logic to determine if all data is loaded
-      // and disable the infinite scroll
-      if (this.products.length == 100) {
-        event.target.disabled = true;
-      }
-    }, 500);
+    }, 1000);
   }
 
   // scroll carregamento da pagina
@@ -80,42 +82,50 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("entrou");
+    this.fs.collection('Products').valueChanges().subscribe(prodList => {
+      this.prodList = prodList;
+      this.loadedProdList = prodList;
+    })
+  }
+
+  initializeItems(): void {
+    if (!this.products.length) {
+      this.carregaProdutoOriginal();
+      console.log("initialize -- products", this.products);
+    }
+    this.prodList = this.products;
+    console.log("initialize -- prodLIST", this.prodList);
+    console.log("initialize -- products", this.products);
+  }
+
+  filterList(event) {
+    console.log("FILTER");
+    //this.initializeItems();
+
+    const searchTerm = event.srcElement.value;
+    console.log("searchTerm", searchTerm);
+
+    if (!searchTerm) {
+      this.initializeItems();
+      return;
+    }
+
+    this.products = this.prodList.filter(currentProd => {
+      if (currentProd.tipo && searchTerm) {
+        if (currentProd.tipo.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        }
+        return false;
+      }
+    })
+
+    console.log("dentro do FIlter-prod++", this.products);
   }
 
   ngOnDestroy() {
     this.productsSubscription.unsubscribe();
   }
-
-
-  search(event) {
-    let searchKey: string = event.target.value;
-    let firstLetter = searchKey.toUpperCase();
-
-    if (searchKey.length == 0) {
-      this.sampleArr = [];
-      this.resultArr = [];
-    }
-
-    if (this.sampleArr.length == 0) {
-      this.fs.collection('Products', ref => ref.where('tipo', '==', firstLetter)).snapshotChanges()
-        .subscribe(data => {
-          data.forEach(childData => {
-            this.sampleArr.push(childData.payload.doc.data())
-          });
-        })
-    } else {
-      this.resultArr = [];
-      this.sampleArr.forEach(val => {
-        let name: string = val['tipo'];
-        if (name.toUpperCase().startsWith(searchKey.toUpperCase())) {
-          if (true) {
-            this.resultArr.push(val);
-          }
-        }
-      })
-    }
-  }
-
 
   async logout() {
     await this.presentLoading();

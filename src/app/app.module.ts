@@ -24,7 +24,6 @@ import { HttpModule } from '@angular/http';
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-//import { Camera, CameraOptions } from '@ionic-enterprise/camera/ngx';
 
 @NgModule({
   declarations: [AppComponent],
