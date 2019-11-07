@@ -5,7 +5,7 @@
 </ion-header>
 
 <!-- Searchbar with danger color -->
-<ion-searchbar placeholder="Apartamento, Casa, Chácara..." (ionInput)="filterList($event)" animated>
+<ion-searchbar placeholder="Buscar por Finalidade..." (ionInput)="filterList($event)" animated>
 </ion-searchbar>
 
     <ion-content>
@@ -80,26 +80,28 @@
                 <ion-icon name="cart" slot="start" color="primary"></ion-icon>
                 <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label>
               </ion-item>
+
             </ion-card>
 
           </ion-item>
           <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="deleteProduct(product.id)">
+            <ion-item-option color="danger" (click)="presentAlertConfirmDelete(product.id)">
               <ion-icon slot="top" name="trash"></ion-icon>
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
+
       </ion-list>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button>
-          <ion-icon name="share"></ion-icon>
+          <ion-icon name="construct"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="start">
           <ion-fab-button color="light" routerLink="/profile">
             <ion-icon name="person"></ion-icon>
           </ion-fab-button>
-          <ion-fab-button color="danger" (click)="presentAlertConfirm()">
+          <ion-fab-button color="danger" (click)="presentAlertConfirmLogout()">
             <ion-icon name="power"></ion-icon>
           </ion-fab-button>
         </ion-fab-list>

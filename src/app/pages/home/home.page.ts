@@ -21,6 +21,9 @@ export class HomePage implements OnInit {
   public prodList: Product[];
   public loadedProdList: Product[];
 
+  //sharing
+  public message: string;
+
   constructor(
     private productsService: ProductService,
     private authService: AuthService,
@@ -29,12 +32,10 @@ export class HomePage implements OnInit {
     public fs: AngularFirestore,
     public alertController: AlertController,
   ) {
-    this.productsSubscription = this.productsService.getProducts().subscribe(data => {
-      this.products = data;
-    });
+    this.carregaProdutoOriginal();
   }
 
-  carregaProdutoOriginal(){
+  carregaProdutoOriginal() {
     this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
     });
@@ -56,8 +57,8 @@ export class HomePage implements OnInit {
     //this.infiniteScroll.disabled = !this.infiniteScroll.disabled; --VOLTAR
   }
 
-  //ion-alert
-  async presentAlertConfirm() {
+  //ion-alert Logout
+  async presentAlertConfirmLogout() {
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: 'Deseja sair da Conta ?',
@@ -73,6 +74,31 @@ export class HomePage implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             this.logout();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  //ion-alert deletar
+  async presentAlertConfirmDelete(id: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deletar Imovel ?',
+      buttons: [
+        {
+          text: 'Deletar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            this.deleteProduct(id);
+          }
+        }, {
+          text: 'Cancelar',
+          cssClass: 'secondary',
+          handler: () => {
           }
         }
       ]
@@ -99,7 +125,7 @@ export class HomePage implements OnInit {
     console.log("initialize -- products", this.products);
   }
 
-  filterList(event) {
+  async filterList(event) {
     console.log("FILTER");
     //this.initializeItems();
 
@@ -112,8 +138,8 @@ export class HomePage implements OnInit {
     }
 
     this.products = this.prodList.filter(currentProd => {
-      if (currentProd.tipo && searchTerm) {
-        if (currentProd.tipo.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+      if (currentProd.finalidade && searchTerm) {
+        if (currentProd.finalidade.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;
         }
         return false;
@@ -156,4 +182,5 @@ export class HomePage implements OnInit {
     const toast = await this.toastCtrl.create({ message, duration: 2000 });
     toast.present();
   }
+
 }

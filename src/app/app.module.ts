@@ -23,6 +23,7 @@ import { HttpModule } from '@angular/http';
 
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @NgModule({
@@ -46,7 +47,8 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
     SplashScreen,
     Camera ,File ,WebView, AngularFireStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Keyboard
+    Keyboard,
+    SocialSharing
   ],
   bootstrap: [AppComponent]
 })

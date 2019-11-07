@@ -10,6 +10,8 @@ import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: 'app-details',
@@ -22,6 +24,13 @@ export class DetailsPage implements OnInit {
   customYearValues = [2019, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
   customDayShortNames = ['s\u00f8n', 'man', 'tir', 'ons', 'tor', 'fre', 'l\u00f8r'];
   customPickerOptions: any;
+
+  //sharing
+  public mensagem: string;
+  public fotos: any = {};
+  public piscina: string;
+  public lazer: string;
+  public churrasqueira: string;
 
   //variaveis do Upload Images
   imageURL: string
@@ -65,6 +74,7 @@ export class DetailsPage implements OnInit {
     public afs: AngularFirestore,
     public auth: AuthService,
     private afStorage: AngularFireStorage,
+    private socialSharing: SocialSharing,
   ) {
 
     //form do details.page.ts
@@ -118,6 +128,72 @@ export class DetailsPage implements OnInit {
       }]
     }
 
+  }
+
+  //metodo cria mensagem de sharing
+  criaMensagemSharing() {
+    if (this.product.detalhe_um) {
+      this.piscina = "Imovel com *Piscina*";
+    }
+    if (this.product.detalhe_dois) {
+      this.lazer = "Imovel com *Area de Lazer*";
+    }
+    if (this.product.detalhe_tres) {
+      this.churrasqueira = "Imovel com *Churrasqueira*";
+    }
+
+    this.mensagem = "*Imobiliária C.IMOB*\n\n"
+      + "*Imovel:* " + this.product.tipo + "\n";
+    if (this.product.endereco.length) {
+      this.mensagem += "*Endereço:* " + this.product.endereco + "\n";
+    }
+    if (this.product.bairro.length) {
+      this.mensagem += "*Bairro:* " + this.product.bairro + "\n";
+    }
+    if (this.product.area_util != null) {
+      this.mensagem += "*Área Util:* " + this.product.area_util + "\n";
+    }
+    if (this.product.area_total != null) {
+      this.mensagem += "*Área Total:* " + this.product.area_total + "\n";
+    }
+    if (this.product.detalhe_um) {
+      this.mensagem += this.piscina + "\n";
+    }
+    if (this.product.detalhe_dois) {
+      this.mensagem += this.lazer + "\n";
+    }
+    if (this.product.detalhe_tres) {
+      this.mensagem += this.churrasqueira + "\n";
+    }
+    if (this.product.valor_iptu != null) {
+      this.mensagem += "*IPTU:* " + this.product.valor_iptu + "\n";
+    }
+    if (this.product.valor_condominio != null) {
+      this.mensagem += "*Condomínio:* " + this.product.valor_condominio + "\n";
+    }
+    if (this.product.valor != null) {
+      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n\n";
+    }
+    this.mensagem += "*Galeria de Imagens*\n";
+
+    this.fotos = [];
+    this.product.images.forEach(obj => (
+      this.fotos.push(obj.trim().split(','))
+    ));
+
+    console.log(this.mensagem);
+    console.log(this.fotos);
+  }
+
+  //Compartilhamento de imovel
+  compartilharWpp() {
+    if (this.productId) {
+      this.criaMensagemSharing();
+      this.socialSharing.shareViaWhatsApp(
+        this.mensagem, "", this.fotos);
+    } else {
+      this.presentToast('Compartilhe um Imovel Cadastrado.');
+    }
   }
 
   //metodos do Upload Images
@@ -180,8 +256,8 @@ export class DetailsPage implements OnInit {
     this.product.images.pop();
   }
 
-  //ion-alert
-  async presentAlertConfirm() {
+  //ion-alert Salvar Produto
+  async presentAlertSalvarProduto() {
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: 'Deseja Salvar o Imóvel ?',
@@ -196,6 +272,31 @@ export class DetailsPage implements OnInit {
           text: 'Gravar',
           handler: () => {
             this.saveProduct();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+  }
+
+  //ion-alert Delete foto Array
+  async presentAlertDeleteArrayFoto(id) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deletar a imagem ?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Deletar',
+          handler: () => {
+            this.deleteProductImage(id);
           }
         }
       ]
@@ -350,6 +451,7 @@ export class DetailsPage implements OnInit {
         await this.productService.addProduct(produto);
         await this.loading.dismiss();
 
+        this.presentToast('Cadastrado com Suesso.');
         this.navCtrl.navigateBack('/home');
       } catch (error) {
         this.presentToast('Erro ao tentar salvar');
@@ -367,5 +469,18 @@ export class DetailsPage implements OnInit {
   async presentToast(message: string) {
     const toast = await this.toastCtrl.create({ message, duration: 2000 });
     toast.present();
+  }
+
+  //deleta as imagens do Array
+  async deleteProductImage(id: any) {
+    try {
+      Object.keys(this.product.images).forEach(key => {
+        if (key.toString() == id) {
+           this.product.images.splice(id, 1);
+        }
+      });
+    } catch (error) {
+      this.presentToast('Erro ao tentar deletar');
+    }
   }
 }
