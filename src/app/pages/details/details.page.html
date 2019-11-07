@@ -182,7 +182,7 @@
         Adicionar Imagem
       </ion-button>
       <ion-item>
-        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton />
+        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true" />
       </ion-item>
       <ion-item *ngIf="product.images">
         <div>
