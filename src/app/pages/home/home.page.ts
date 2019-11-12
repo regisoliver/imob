@@ -89,16 +89,16 @@ export class HomePage implements OnInit {
       message: 'Deletar Imovel ?',
       buttons: [
         {
-          text: 'Deletar',
+          text: 'Cancelar',
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            this.deleteProduct(id);
           }
         }, {
-          text: 'Cancelar',
+          text: 'Deletar',
           cssClass: 'secondary',
           handler: () => {
+            this.deleteProduct(id);
           }
         }
       ]
@@ -175,6 +175,7 @@ export class HomePage implements OnInit {
       await this.productsService.deleteProduct(id);
     } catch (error) {
       this.presentToast('Erro ao tentar deletar');
+      console.log(error);
     }
   }
 

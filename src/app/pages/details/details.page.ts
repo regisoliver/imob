@@ -11,7 +11,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: 'app-details',
@@ -144,9 +143,6 @@ export class DetailsPage implements OnInit {
 
     this.mensagem = "*Imobiliária C.IMOB*\n\n"
       + "*Imovel:* " + this.product.tipo + "\n";
-    if (this.product.endereco.length) {
-      this.mensagem += "*Endereço:* " + this.product.endereco + "\n";
-    }
     if (this.product.bairro.length) {
       this.mensagem += "*Bairro:* " + this.product.bairro + "\n";
     }
@@ -241,12 +237,6 @@ export class DetailsPage implements OnInit {
         this.carregaProductToFGroup();
 
         this.loading.dismiss();
-        /*
-        this.http.get(`https://ucarecdn.com/${this.imageURL}/detect_faces/`)
-          .subscribe(event => {
-            this.noFace = event.json().faces == 0
-          })
-          */
       })
   }
 
@@ -400,7 +390,7 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
       this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
       this.fGroup.get('observacao').setValue(this.product.observacao);
-    }, 300);
+    }, 200);
   }
 
   ngOnDestroy() {
@@ -412,9 +402,6 @@ export class DetailsPage implements OnInit {
     this.productSubscription = this.productService.getProduct(this.productId).subscribe(data => {
       this.product = data;
     });
-
-    //this.product.images = JSON.parse(this.product.foto);
-    //console.log("load images: ", this.product.images);
   }
 
 
@@ -476,7 +463,7 @@ export class DetailsPage implements OnInit {
     try {
       Object.keys(this.product.images).forEach(key => {
         if (key.toString() == id) {
-           this.product.images.splice(id, 1);
+          this.product.images.splice(id, 1);
         }
       });
     } catch (error) {

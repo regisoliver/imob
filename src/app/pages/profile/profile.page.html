@@ -1,34 +1,37 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button></ion-back-button>
+		</ion-buttons>
 
-    <ion-title>Perfil</ion-title>
-  </ion-toolbar>
+		<ion-title>Perfil</ion-title>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
+	<ion-list>
+		<ion-card>
+			<ion-card-header>
+				<img src="https://ucarecdn.com/bd144f77-1aed-4458-a73d-9abbf2b41d7a/logooriginal.jpeg">
+			</ion-card-header>
+		</ion-card>
 
-  <div id="profile-info" *ngIf="username">
-		<ion-grid>
-			<ion-row>
-				<ion-col size="4" class="user-image">
-					<ion-img src="https://ucarecdn.com/{{ profilePic }}/-/scale_crop/200x200/center/"></ion-img>
-				</ion-col>
-				<ion-col size="8">
-					<p>{{ username }}</p>
-					<ion-button shape="round" color="primary" routerLink="/tabs/edit-profile">Edit Profile</ion-button>
-				</ion-col>
-			</ion-row>
-		</ion-grid>
-	</div>
+		<ion-card>
+			<ion-item>
+				<ion-avatar slot="start">
+					<img src="https://ucarecdn.com/cef0d778-9a41-4fa6-a232-b4682ca37332/regis">
+				</ion-avatar>
+				<ion-label><b>Desenvolvedor</b> Régis</ion-label>
+				<ion-button slot="end" shape="round" (click)="alterarPerfil()">Alterar</ion-button>
+			</ion-item>
+
+			<ion-item class="activated">
+				<ion-icon name="mail-unread" slot="start" color="primary"></ion-icon>
+				<ion-label>contatoweboliver@hotmail.com.br</ion-label>
+			</ion-item>
+		</ion-card>
+
+	</ion-list>
 
 
-	<div id="images" *ngIf="posts">
-		<div class="image" *ngFor="let post of posts">
-			<img (click)="goTo(post)" class="main-image" src="https://ucarecdn.com/{{ post }}/-/scale_crop/200x200/center/" />
-		</div>
-  </div>
-  
 </ion-content>

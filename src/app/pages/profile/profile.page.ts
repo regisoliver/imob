@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -11,38 +14,60 @@ import { Router } from '@angular/router';
 })
 export class ProfilePage implements OnInit {
 
-  mainuser: AngularFirestoreDocument
-	userPosts
-	sub
-	posts
-	username: string
-	profilePic: string
+  public userService: ProductService;
+  private userSubscription: Subscription;
+  message = "";
+
+  public id: string = null;
+  public usuario: User = {};
 
   constructor(
     private afs: AngularFirestore,
-    private user: AuthService,
-    private router: Router
-    ) {
-    const posts = afs.doc('users/${user.getUID()}')
+    private router: Router,
+    public authService: AuthService,
+    private toastCtrl: ToastController,
+  ) {
+    this.id = this.authService.getAuth().currentUser.uid;
+    console.log("USer: construtor: ", this.id);
+    //if (this.id) this.loadUser();
+    //console.log("USer: construtor: ", this.usuario);
     
-    this.mainuser = afs.doc(`users/${user.getUID()}`)
-		this.sub = this.mainuser.valueChanges().subscribe(event => {
-			this.posts = event.posts
-			this.username = event.username
-			this.profilePic = event.profilePic
-		})
-   }
-
-   ngOnDestroy() {
-		this.sub.unsubscribe()
-	}
-
-  ngOnInit() {
-
+    /*
+    this.userSubscription = this.userService.getUser(this.id).subscribe(data => {
+      this.usuario = data;
+    });
+    */
+    
   }
 
-  goTo(postID: string) {
-		this.router.navigate(['/tabs/post/' + postID.split('/')[0]])
-	}
+  ngOnDestroy() {
+    if (this.userSubscription) this.userSubscription.unsubscribe();
+  }
+
+  ngOnInit() {
+    //this.afs.collection('Users').valueChanges().subscribe(obj => {
+    //  this.user = obj;
+    //})
+
+    //const usuario = this.authService.
+  }
+
+  loadUser() {
+    this.userSubscription = this.userService.getUser(this.id).subscribe(data => {
+      this.usuario = data;
+    });
+
+    console.log("USer: construtor: ", this.usuario);
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastCtrl.create({ message, duration: 5000 });
+    toast.present();
+  }
+
+  alterarPerfil(){
+    this.message = "Desculpe, Você precisa ser um desenvolvedor :)";
+    this.presentToast(this.message);
+  }
 
 }
