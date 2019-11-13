@@ -30,6 +30,7 @@ export class DetailsPage implements OnInit {
   public piscina: string;
   public lazer: string;
   public churrasqueira: string;
+  public videofinal: any = {};
 
   //variaveis do Upload Images
   imageURL: string
@@ -170,18 +171,18 @@ export class DetailsPage implements OnInit {
       this.mensagem += "*Condomínio:* " + this.product.valor_condominio + "\n";
     }
     if (this.product.valor != null) {
-      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n\n";
+      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n";
     }
-    this.mensagem += "*Galeria de Imagens*\n";
 
     this.fotos = [];
     this.product.images.forEach(obj => (
-      //this.fotos.push(obj.trim().split(','))
+      //this.fotos.push(obj.trim().split(',')) *** não é usado as imagens ***
       this.fotos.push(obj)
     ));
 
     console.log(this.mensagem);
     console.log(this.fotos);
+    console.log(this.product.video);
   }
 
   //Compartilhamento de imovel
@@ -189,8 +190,7 @@ export class DetailsPage implements OnInit {
     await this.presentLoading();
     if (this.productId) {
       this.criaMensagemSharing();
-      //this.socialSharing.shareViaWhatsApp(this.mensagem, "", this.fotos);
-      this.socialSharing.share(this.mensagem, "", this.video, this.fotos)
+      this.socialSharing.share(this.mensagem, "", this.product.video, "");
       await this.loading.dismiss();
     } else {
       await this.loading.dismiss();
@@ -526,8 +526,8 @@ export class DetailsPage implements OnInit {
 
   async deleteVideo() {
     await this.presentLoading();
-    this.video = "";
-    this.product.video = "";
+    this.video = null;
+    this.product.video = null;
     await this.loading.dismiss();
   }
 }
