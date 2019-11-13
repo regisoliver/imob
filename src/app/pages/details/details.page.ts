@@ -174,7 +174,8 @@ export class DetailsPage implements OnInit {
 
     this.fotos = [];
     this.product.images.forEach(obj => (
-      this.fotos.push(obj.trim().split(','))
+      //this.fotos.push(obj.trim().split(','))
+      this.fotos.push(obj)
     ));
 
     console.log(this.mensagem);
@@ -185,8 +186,8 @@ export class DetailsPage implements OnInit {
   compartilharWpp() {
     if (this.productId) {
       this.criaMensagemSharing();
-      this.socialSharing.shareViaWhatsApp(
-        this.mensagem, "", this.fotos);
+      //this.socialSharing.shareViaWhatsApp(this.mensagem, "", this.fotos);
+      this.socialSharing.share(this.mensagem, "", this.fotos)
     } else {
       this.presentToast('Compartilhe um Imovel Cadastrado.');
     }
