@@ -175,10 +175,11 @@ export class DetailsPage implements OnInit {
     }
 
     this.fotos = [];
-    this.product.images.forEach(obj => (
-      //this.fotos.push(obj.trim().split(',')) *** não é usado as imagens ***
-      this.fotos.push(obj)
-    ));
+    if(this.product.images != null || this.product.images != undefined){
+      this.product.images.forEach(obj => (
+        this.fotos.push(obj)
+      ));
+    }
 
     console.log(this.mensagem);
     console.log(this.fotos);
@@ -190,7 +191,16 @@ export class DetailsPage implements OnInit {
     await this.presentLoading();
     if (this.productId) {
       this.criaMensagemSharing();
-      this.socialSharing.share(this.mensagem, "", this.product.video, "");
+
+      if(this.product.video == undefined || this.product.video == null){
+        if(this.fotos == undefined || this.fotos == null){
+          this.socialSharing.share(this.mensagem, "", "", "");
+        }else{
+          this.socialSharing.share(this.mensagem, "", this.fotos, "");
+        }
+      }else{
+        this.socialSharing.share(this.mensagem, "", this.product.video, "");
+      }
       await this.loading.dismiss();
     } else {
       await this.loading.dismiss();
