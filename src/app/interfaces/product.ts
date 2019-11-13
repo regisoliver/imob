@@ -33,4 +33,5 @@ export interface Product {
     detalhe_dois?: boolean;
     detalhe_tres?: boolean;
     images?: Array<String>;
+    video?: string;
 }

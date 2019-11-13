@@ -36,6 +36,7 @@ export class DetailsPage implements OnInit {
   desc: string
   noFace: boolean = false
   imagemtotal: string
+  video: string;
 
   scaleCrop: string = '-/scale_crop/200x200'
 
@@ -106,7 +107,8 @@ export class DetailsPage implements OnInit {
       ])],
       'data_entrada': [null],
       'corretor': [null],
-      'images': [null]
+      'images': [null],
+      'video': [null]
     });
 
     this.productId = this.activatedRoute.snapshot.params['id'];
@@ -132,13 +134,13 @@ export class DetailsPage implements OnInit {
   //metodo cria mensagem de sharing
   criaMensagemSharing() {
     if (this.product.detalhe_um) {
-      this.piscina = "Imovel com *Piscina*";
+      this.piscina = "*Imovel com Piscina*";
     }
     if (this.product.detalhe_dois) {
-      this.lazer = "Imovel com *Area de Lazer*";
+      this.lazer = "*Imovel com Area de Lazer*";
     }
     if (this.product.detalhe_tres) {
-      this.churrasqueira = "Imovel com *Churrasqueira*";
+      this.churrasqueira = "*Imovel com Churrasqueira*";
     }
 
     this.mensagem = "*Imobiliária C.IMOB*\n\n"
@@ -183,12 +185,15 @@ export class DetailsPage implements OnInit {
   }
 
   //Compartilhamento de imovel
-  compartilharWpp() {
+  async compartilharWpp() {
+    await this.presentLoading();
     if (this.productId) {
       this.criaMensagemSharing();
       //this.socialSharing.shareViaWhatsApp(this.mensagem, "", this.fotos);
-      this.socialSharing.share(this.mensagem, "", this.fotos)
+      this.socialSharing.share(this.mensagem, "", this.video, this.fotos)
+      await this.loading.dismiss();
     } else {
+      await this.loading.dismiss();
       this.presentToast('Compartilhe um Imovel Cadastrado.');
     }
   }
@@ -213,32 +218,47 @@ export class DetailsPage implements OnInit {
     this.presentLoading();
 
     const files = event.target.files
-    console.log("event target name: ", files[0].name);
-
-    const data2 = new String;
+    let Array = files[0].name.split(".");
+    let nomeFinal = Array[Array.length - 1].toUpperCase();
+    console.log("nomeFinal: ", nomeFinal);
 
     const data = new FormData()
     data.append('file', files[0])
     data.append('UPLOADCARE_STORE', '1')
     data.append('UPLOADCARE_PUB_KEY', 'fd95da9399e52e4f97e0')
 
-    this.http.post('https://upload.uploadcare.com/base/', data)
-      .subscribe(event => {
-        this.imageURL = event.json().file
-        console.log("Subscribe mostrando imageURL: ", this.imageURL);
+    if (nomeFinal == "JPG" || nomeFinal == "JPEG" || nomeFinal == "PNG" || nomeFinal == "BMP") {
+      this.http.post('https://upload.uploadcare.com/base/', data)
+        .subscribe(event => {
+          this.imageURL = event.json().file
+          console.log("Subscribe mostrando imageURL: ", this.imageURL);
 
-        this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
-        console.log("imagemtotal: ", this.imagemtotal);
+          this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
+          console.log("imagemtotal: ", this.imagemtotal);
 
-        if (this.product.images == null) {
-          this.product.images = [];
-        }
-        this.product.images.push(this.imagemtotal)
-        console.log("this.product.images com push: ", this.product.images);
-        this.carregaProductToFGroup();
+          if (this.product.images == null) {
+            this.product.images = [];
+          }
+          this.product.images.push(this.imagemtotal)
+          console.log("this.product.images com push: ", this.product.images);
+          this.carregaProductToFGroup();
 
-        this.loading.dismiss();
-      })
+          this.loading.dismiss();
+        })
+    } else {
+      this.http.post('https://upload.uploadcare.com/base/', data)
+        .subscribe(event => {
+          this.imageURL = event.json().file
+          this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
+          this.video = files[0].name;
+
+          console.log("this.product.video: ", this.product.video);
+          this.carregaProductToFGroup();
+
+          this.loading.dismiss();
+        })
+    }
+
   }
 
   //metodo de teste do form
@@ -297,9 +317,33 @@ export class DetailsPage implements OnInit {
 
   }
 
+  //ion-alert Delete VIDEO
+  async presentAlertDeleteVideo() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deletar o Vídeo ?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Deletar',
+          handler: () => {
+            this.deleteVideo();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+  }
+
   criaConstanteProducts() {
     const prod: Product = {
-      //id: this.product.id,
       status: this.product.status,
       codigo: this.product.codigo,
       tipo: this.product.tipo,
@@ -325,7 +369,8 @@ export class DetailsPage implements OnInit {
       observacao: this.product.observacao,
       images: this.product.images,
       corretor: this.product.corretor,
-      data_entrada: this.product.data_entrada
+      data_entrada: this.product.data_entrada,
+      video: this.product.video
     }
 
     Object.keys(prod).forEach(key => {
@@ -338,7 +383,6 @@ export class DetailsPage implements OnInit {
   }
 
   carregaProductToFGroup() {
-    //this.product.id = this.productId;
     this.product.status = this.fGroup.value['status'];
     this.product.codigo = this.fGroup.value['codigo'];
     this.product.tipo = this.fGroup.value['tipo'];
@@ -367,7 +411,6 @@ export class DetailsPage implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      //this.fGroup.get('id').setValue(this.productId);
       this.fGroup.get('status').setValue(this.product.status);
       this.fGroup.get('codigo').setValue(this.product.codigo);
       this.fGroup.get('tipo').setValue(this.product.tipo);
@@ -391,6 +434,12 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
       this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
       this.fGroup.get('observacao').setValue(this.product.observacao);
+      if (this.product.video != null) {
+        this.video = this.product.video;
+        let Array = this.video.trim().split('/');
+        this.video = Array[Array.length - 1];
+        console.log(this.video);
+      }
     }, 200);
   }
 
@@ -444,7 +493,7 @@ export class DetailsPage implements OnInit {
       } catch (error) {
         this.presentToast('Erro ao tentar salvar');
         console.log(error)
-        this.loading.dismiss();
+        await this.loading.dismiss();
       }
     }
   }
@@ -461,14 +510,24 @@ export class DetailsPage implements OnInit {
 
   //deleta as imagens do Array
   async deleteProductImage(id: any) {
+    await this.presentLoading();
     try {
       Object.keys(this.product.images).forEach(key => {
         if (key.toString() == id) {
           this.product.images.splice(id, 1);
         }
       });
+      await this.loading.dismiss();
     } catch (error) {
+      await this.loading.dismiss();
       this.presentToast('Erro ao tentar deletar');
     }
+  }
+
+  async deleteVideo() {
+    await this.presentLoading();
+    this.video = "";
+    this.product.video = "";
+    await this.loading.dismiss();
   }
 }

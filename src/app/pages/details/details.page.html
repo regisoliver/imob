@@ -174,16 +174,31 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Galeria de Imagens
+        Vídeo do Imovel
       </ion-label>
     </ion-item-divider>
     <ion-list>
-      <ion-button shape="round" color="primary" (click)="uploadFile()" fill="outline" expand="block">
-        Adicionar Imagem
+      <ion-button shape="round" color="primary" (click)="uploadFile()" expand="block">
+        Adicionar Fotos / Vídeos
       </ion-button>
       <ion-item>
         <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true" />
       </ion-item>
+    </ion-list>
+    <ion-list>
+      <ion-item *ngIf="product.video != null">
+        <ion-chip expand="block" (click)="presentAlertDeleteVideo()">
+          <ion-icon name="cloud-done" color="primary"></ion-icon>
+          <ion-label>{{ video }}</ion-label>
+        </ion-chip>
+      </ion-item>
+    </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Galeria de Imagens
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
       <ion-item *ngIf="product.images">
         <div>
           <ion-list>
@@ -207,7 +222,8 @@
 
 <ion-footer>
   <div class="centralizado">
-    <ion-button expand=" block" shape="round" (click)="presentAlertSalvarProduto()" [disabled]="!fGroup.valid" expand="block">
+    <ion-button expand=" block" shape="round" (click)="presentAlertSalvarProduto()" [disabled]="!fGroup.valid"
+      expand="block">
       Salvar Imóvel
     </ion-button>
   </div>
