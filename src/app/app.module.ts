@@ -2,6 +2,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -48,7 +49,8 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
     Camera ,File ,WebView, AngularFireStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Keyboard,
-    SocialSharing
+    SocialSharing,
+    ScreenOrientation
   ],
   bootstrap: [AppComponent]
 })

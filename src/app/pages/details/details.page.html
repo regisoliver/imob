@@ -129,7 +129,7 @@
       <ion-item>
         <ion-label color="primary">Aniversário:</ion-label>
         <ion-datetime value="2019-01-01" min="1970-01" max="2020" [dayShortNames]="customDayShortNames"
-          displayFormat="DD/MMM/YYYY" monthShortNames="jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, des"
+          displayFormat="DD/MMM/YYYY" monthShortNames="jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez"
           formControlName="aniversario"></ion-datetime>
       </ion-item>
       <ion-item>
@@ -137,7 +137,9 @@
         <ion-select placeholder="Canal" formControlName="canal">
           <ion-select-option value="Carteira">Carteira</ion-select-option>
           <ion-select-option value="OLX">OLX</ion-select-option>
+          <ion-select-option value="Facebook">Facebook</ion-select-option>
           <ion-select-option value="Outros">Outros</ion-select-option>
+          
         </ion-select>
       </ion-item>
       <ion-item>
