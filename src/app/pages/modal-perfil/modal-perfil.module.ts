@@ -5,13 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ProfilePage } from './profile.page';
-import { ModalPerfilPage } from '../modal-perfil/modal-perfil.page';
+import { ModalPerfilPage } from './modal-perfil.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProfilePage
+    component: ModalPerfilPage
   }
 ];
 
@@ -22,7 +21,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ProfilePage, ModalPerfilPage],
-  entryComponents: [ModalPerfilPage]
+  declarations: [ModalPerfilPage],
+  exports: [ModalPerfilPage]
 })
-export class ProfilePageModule {}
+export class ModalPerfilPageModule {}

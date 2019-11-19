@@ -18,20 +18,33 @@
 
 		<ion-card>
 			<ion-item>
-				<ion-avatar slot="start">
-					<img src="https://ucarecdn.com/cef0d778-9a41-4fa6-a232-b4682ca37332/regis">
+				<ion-avatar slot="start" *ngIf="usuario.foto != null">
+					<img src="{{ usuario.foto }}">
 				</ion-avatar>
-				<ion-label><b>Desenvolvedor</b> Régis</ion-label>
-				<ion-button slot="end" shape="round" (click)="alterarPerfil()">Alterar</ion-button>
+				<ion-avatar slot="start" *ngIf="usuario.foto == null">
+					<img src="https://ucarecdn.com/6632a73e-6e9a-4092-9138-7b3395c4f96c/perfil.jpg">
+				</ion-avatar>
+				<ion-label><b>{{ usuario.nome }}</b></ion-label>
+				<ion-button slot="end" shape="round" (click)="showModalPerfil()">Alterar</ion-button>
 			</ion-item>
 
 			<ion-item class="activated">
 				<ion-icon name="mail-unread" slot="start" color="primary"></ion-icon>
-				<ion-label>contatoweboliver@hotmail.com.br</ion-label>
+				<ion-label>{{ usuario.email }}</ion-label>
+			</ion-item>
+			<ion-item class="activated" *ngIf="usuario.isAdmin == true">
+				<ion-icon name="heart" slot="start" color="warning"></ion-icon>
+				<ion-label><b>Administrador</b></ion-label>
 			</ion-item>
 		</ion-card>
 
 	</ion-list>
 
-
 </ion-content>
+
+<ion-footer>
+	<ion-item>
+		<ion-label><b><i>c.imob</i></b></ion-label>
+		<ion-badge slot="end" color="warning">version 1.0.0</ion-badge>
+	</ion-item>
+</ion-footer>

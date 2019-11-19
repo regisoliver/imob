@@ -5,7 +5,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
+import { ModalPerfilPage } from '../modal-perfil/modal-perfil.page';
 
 @Component({
   selector: 'app-profile',
@@ -14,8 +15,7 @@ import { ToastController } from '@ionic/angular';
 })
 export class ProfilePage implements OnInit {
 
-  public userService: ProductService;
-  private userSubscription: Subscription;
+  public userSubscription: Subscription;
   message = "";
 
   public id: string = null;
@@ -26,18 +26,19 @@ export class ProfilePage implements OnInit {
     private router: Router,
     public authService: AuthService,
     private toastCtrl: ToastController,
+    private userService: ProductService,
+    private modalCtrl: ModalController,
   ) {
     this.id = this.authService.getAuth().currentUser.uid;
-    console.log("USer: construtor: ", this.id);
-    //if (this.id) this.loadUser();
-    //console.log("USer: construtor: ", this.usuario);
-    
-    /*
-    this.userSubscription = this.userService.getUser(this.id).subscribe(data => {
-      this.usuario = data;
+    if (this.id) this.loadUser();
+  }
+
+  async showModalPerfil(){
+    const modal = await this.modalCtrl.create({
+      component: ModalPerfilPage
     });
-    */
-    
+
+    modal.present();
   }
 
   ngOnDestroy() {
@@ -45,29 +46,18 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
-    //this.afs.collection('Users').valueChanges().subscribe(obj => {
-    //  this.user = obj;
-    //})
 
-    //const usuario = this.authService.
   }
 
   loadUser() {
     this.userSubscription = this.userService.getUser(this.id).subscribe(data => {
       this.usuario = data;
     });
-
-    console.log("USer: construtor: ", this.usuario);
   }
 
   async presentToast(message: string) {
     const toast = await this.toastCtrl.create({ message, duration: 5000 });
     toast.present();
-  }
-
-  alterarPerfil(){
-    this.message = "Desculpe, Você precisa ser um desenvolvedor :)";
-    this.presentToast(this.message);
   }
 
 }

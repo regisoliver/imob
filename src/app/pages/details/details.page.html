@@ -8,7 +8,7 @@
     <ion-title>Imovel</ion-title>
 
     <ion-button slot="end" (click)="compartilharWpp()" fill="default">
-      <ion-icon name="share"></ion-icon>
+      <ion-icon name="share">Cancelar</ion-icon>
     </ion-button>
 
   </ion-toolbar>
@@ -139,7 +139,7 @@
           <ion-select-option value="OLX">OLX</ion-select-option>
           <ion-select-option value="Facebook">Facebook</ion-select-option>
           <ion-select-option value="Outros">Outros</ion-select-option>
-          
+
         </ion-select>
       </ion-item>
       <ion-item>
@@ -174,19 +174,19 @@
         </ion-textarea>
       </ion-item>
     </ion-list>
-    <ion-item-divider>
-      <ion-label>
-        Vídeo do Imovel
-      </ion-label>
-    </ion-item-divider>
     <ion-list>
       <ion-button shape="round" color="primary" (click)="uploadFile()" expand="block">
         Adicionar Fotos / Vídeos
       </ion-button>
       <ion-item>
-        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true" />
+        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true" class="ion-hide"/>
       </ion-item>
     </ion-list>
+    <ion-item-divider>
+      <ion-label>
+        Vídeo do Imovel
+      </ion-label>
+    </ion-item-divider>
     <ion-list>
       <ion-item *ngIf="product.video != null">
         <ion-chip expand="block" (click)="presentAlertDeleteVideo()">

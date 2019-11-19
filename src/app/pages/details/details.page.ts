@@ -9,7 +9,6 @@ import { Subscription, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
@@ -74,7 +73,6 @@ export class DetailsPage implements OnInit {
     public fBuilder: FormBuilder,
     public afs: AngularFirestore,
     public auth: AuthService,
-    private afStorage: AngularFireStorage,
     private socialSharing: SocialSharing,
   ) {
 
@@ -150,10 +148,10 @@ export class DetailsPage implements OnInit {
       this.mensagem += "*Bairro:* " + this.product.bairro + "\n";
     }
     if (this.product.area_util != null) {
-      this.mensagem += "*Área Util:* " + this.product.area_util + "\n";
+      this.mensagem += "*Área Util:* " + this.product.area_util + " m²\n";
     }
     if (this.product.area_total != null) {
-      this.mensagem += "*Área Total:* " + this.product.area_total + "\n";
+      this.mensagem += "*Área Total:* " + this.product.area_total + " m²\n";
     }
     if (this.product.detalhe_um) {
       this.mensagem += this.piscina + "\n";
