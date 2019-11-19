@@ -169,7 +169,7 @@ export class DetailsPage implements OnInit {
       this.mensagem += "*Condomínio:* " + this.product.valor_condominio + "\n";
     }
     if (this.product.valor != null) {
-      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n";
+      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n\n";
     }
 
     this.fotos = [];
@@ -194,7 +194,7 @@ export class DetailsPage implements OnInit {
         if(this.fotos == undefined || this.fotos == null){
           this.socialSharing.share(this.mensagem, "", "", "");
         }else{
-          this.socialSharing.share(this.mensagem, "", this.fotos, "");
+          this.socialSharing.share(this.mensagem, "", "", this.fotos);
         }
       }else{
         this.socialSharing.share(this.mensagem, "", this.product.video, "");
