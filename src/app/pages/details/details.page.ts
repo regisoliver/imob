@@ -3,6 +3,7 @@ import { Http } from '@angular/http'
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/interfaces/product';
+import { User } from 'src/app/interfaces/user';
 import { NavController, LoadingController, ToastController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, Observable } from 'rxjs';
@@ -30,6 +31,8 @@ export class DetailsPage implements OnInit {
   public lazer: string;
   public churrasqueira: string;
   public videofinal: any = {};
+  public usuario: User = {};
+  public id: string = null;
 
   //variaveis do Upload Images
   imageURL: string
@@ -111,7 +114,6 @@ export class DetailsPage implements OnInit {
     });
 
     this.productId = this.activatedRoute.snapshot.params['id'];
-    console.log("acaba de receber o ID: ", this.productId); // mostra o ID
     if (this.productId) this.loadProduct();
 
     //data-picker product.aniversario
@@ -173,7 +175,7 @@ export class DetailsPage implements OnInit {
     }
 
     this.fotos = [];
-    if(this.product.images != null || this.product.images != undefined){
+    if (this.product.images != null || this.product.images != undefined) {
       this.product.images.forEach(obj => (
         this.fotos.push(obj)
       ));
@@ -190,13 +192,13 @@ export class DetailsPage implements OnInit {
     if (this.productId) {
       this.criaMensagemSharing();
 
-      if(this.product.video == undefined || this.product.video == null){
-        if(this.fotos == undefined || this.fotos == null){
+      if (this.product.video == undefined || this.product.video == null) {
+        if (this.fotos == undefined || this.fotos == null) {
           this.socialSharing.share(this.mensagem, "", "", "");
-        }else{
+        } else {
           this.socialSharing.share(this.mensagem, "", "", this.fotos);
         }
-      }else{
+      } else {
         this.socialSharing.share(this.mensagem, "", this.product.video, "");
       }
       await this.loading.dismiss();
@@ -448,6 +450,7 @@ export class DetailsPage implements OnInit {
         this.video = Array[Array.length - 1];
         console.log(this.video);
       }
+      if (this.product.corretor) this.loadUser();
     }, 200);
   }
 
@@ -462,6 +465,11 @@ export class DetailsPage implements OnInit {
     });
   }
 
+  loadUser() {
+    this.productSubscription = this.productService.getUser(this.product.corretor).subscribe(data => {
+      this.usuario = data;
+    });
+  }
 
   async saveProduct() {
     await this.presentLoading();
@@ -538,4 +546,6 @@ export class DetailsPage implements OnInit {
     this.product.video = null;
     await this.loading.dismiss();
   }
+
+
 }

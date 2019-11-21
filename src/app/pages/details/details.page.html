@@ -16,9 +16,19 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="fGroup">
+    <ion-item-divider *ngIf="this.productId != null">
+      <ion-label>
+        <b>Detalhes do Corretor</b>
+      </ion-label>
+    </ion-item-divider>
+    <ion-list *ngIf="this.productId != null">
+      <ion-item>
+        <ion-label color="primary">Nome Corretor: </ion-label>{{usuario.nome}}
+      </ion-item>
+    </ion-list>
     <ion-item-divider>
       <ion-label>
-        Detalhes do Imovel
+        <b>Detalhes do Imovel</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -80,7 +90,7 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Endereço do Imovel
+        <b>Endereço do Imovel</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -93,7 +103,7 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Área do Imovel
+        <b>Área do Imovel</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -108,7 +118,7 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Proprietário
+        <b>Proprietário</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -153,7 +163,7 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Itens do Imovel
+        <b>Itens do Imovel</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -179,12 +189,13 @@
         Adicionar Fotos / Vídeos
       </ion-button>
       <ion-item>
-        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true" class="ion-hide"/>
+        <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true"
+          class="ion-hide" />
       </ion-item>
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Vídeo do Imovel
+        <b>Vídeo do Imovel</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
@@ -197,7 +208,7 @@
     </ion-list>
     <ion-item-divider>
       <ion-label>
-        Galeria de Imagens
+        <b>Galeria de Imagens</b>
       </ion-label>
     </ion-item-divider>
     <ion-list>
