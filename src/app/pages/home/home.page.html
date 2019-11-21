@@ -8,111 +8,116 @@
 <ion-searchbar placeholder="Buscar por Finalidade..." (ionInput)="filterList($event)" animated>
 </ion-searchbar>
 
-    <ion-content>
+<ion-content>
 
-      <ion-list *ngIf="!products.length">
-        <ion-item *ngFor="let item of [0, 1, 2, 3, 4, 5]">
-          <ion-avatar slot="start">
-            <ion-skeleton-text animated></ion-skeleton-text>
-          </ion-avatar>
-          <ion-label>
-            <h3>
-              <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-            </h3>
-            <p>
-              <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-            </p>
-            <p>
-              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
-            </p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+  <ion-list *ngIf="!products.length">
+    <ion-item *ngFor="let item of [0, 1, 2, 3, 4, 5]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
-      <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
-          <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="crescent" refreshingText="Atualizando...">
-          </ion-refresher-content>
-        </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="crescent" refreshingText="Atualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
 
-      <ion-list>
-        <ion-item-sliding *ngFor="let product of products">
-          <ion-item button [routerLink]="['/details', product.id]">
-            <ion-card>
-              <ion-card-header>
-                <img [src]="product.images[0]" *ngIf="product.images[0]">
-                <ion-card-subtitle color="dark">Status: {{product.status}}</ion-card-subtitle>
-                <ion-card-title color="primary">{{product.tipo}}</ion-card-title>
-              </ion-card-header>
+  <ion-list>
+    <ion-item-sliding *ngFor="let product of products">
+      <ion-item button [routerLink]="['/details', product.id]">
+        <ion-card>
+          <ion-card-header>
+            <div *ngIf="product.images != null">
+              <img [src]="product.images[0]">
+            </div>
+            <div *ngIf="product.images == null">
+              <img src="https://ucarecdn.com/bd144f77-1aed-4458-a73d-9abbf2b41d7a/logooriginal.jpeg">
+            </div>
+            <ion-card-subtitle color="dark">Status: {{product.status}}</ion-card-subtitle>
+            <ion-card-title color="primary">{{product.tipo}}</ion-card-title>
+          </ion-card-header>
 
 
-              <ion-card-content cols="20">
-                <ion-label color="primary">Veja todas as imagens deste imóvel</ion-label>
-                <strong>Observação:</strong>
-                {{product.observacao}}
-              </ion-card-content>
+          <ion-card-content cols="20">
+            <ion-label color="primary">Veja todas as imagens deste imóvel</ion-label>
+            <strong>Observação:</strong>
+            {{product.observacao}}
+          </ion-card-content>
 
-              <ion-item *ngIf="product.detalhe_um == true">
-                <ion-icon name="boat" slot="start" color="tertiary" *ngIf="product.detalhe_um == true"></ion-icon>
-                <ion-label *ngIf="product.detalhe_um == true" color="primary">Imovel com Piscina</ion-label>
-              </ion-item>
-
-              <ion-item *ngIf="product.detalhe_dois == true">
-                <ion-icon name="football" slot="start" color="tertiary" *ngIf="product.detalhe_dois == true"></ion-icon>
-                <ion-label *ngIf="product.detalhe_dois == true" color="primary">Imovel com Area de Lazer</ion-label>
-              </ion-item>
-
-              <ion-item *ngIf="product.detalhe_tres == true">
-                <ion-icon name="bonfire" slot="start" color="tertiary" *ngIf="product.detalhe_tres == true"></ion-icon>
-                <ion-label *ngIf="product.detalhe_tres == true" color="primary">Imovel com Churrasqueira</ion-label>
-              </ion-item>
-
-              <ion-item>
-                <ion-icon name="clipboard" slot="start" color="tertiary"></ion-icon>
-                <ion-label>Finalidade: {{product.finalidade}}</ion-label>
-              </ion-item>
-
-              <ion-item class="activated">
-                <ion-icon name="home" slot="start" color="warning"></ion-icon>
-                <ion-label>Condomínio: {{ product.valor_condominio | currency: 'BRL' }}</ion-label>
-              </ion-item>
-
-              <ion-item>
-                <ion-icon name="cart" slot="start" color="primary"></ion-icon>
-                <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label>
-              </ion-item>
-
-            </ion-card>
-
+          <ion-item *ngIf="product.detalhe_um == true">
+            <ion-icon name="boat" slot="start" color="tertiary" *ngIf="product.detalhe_um == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_um == true" color="primary">Imovel com Piscina</ion-label>
           </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="presentAlertConfirmDelete(product.id)">
-              <ion-icon slot="top" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
 
-      </ion-list>
+          <ion-item *ngIf="product.detalhe_dois == true">
+            <ion-icon name="football" slot="start" color="tertiary" *ngIf="product.detalhe_dois == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_dois == true" color="primary">Imovel com Area de Lazer</ion-label>
+          </ion-item>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-icon name="construct"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-list side="start">
-          <ion-fab-button color="light" routerLink="/profile">
-            <ion-icon name="person"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-button color="danger" (click)="presentAlertConfirmLogout()">
-            <ion-icon name="power"></ion-icon>
-          </ion-fab-button>
-        </ion-fab-list>
-        <ion-fab-list side="top">
-          <ion-fab-button color="warning" routerLink="/details">
-            <ion-icon name="add"></ion-icon>
-          </ion-fab-button>
-        </ion-fab-list>
-      </ion-fab>
+          <ion-item *ngIf="product.detalhe_tres == true">
+            <ion-icon name="bonfire" slot="start" color="tertiary" *ngIf="product.detalhe_tres == true"></ion-icon>
+            <ion-label *ngIf="product.detalhe_tres == true" color="primary">Imovel com Churrasqueira</ion-label>
+          </ion-item>
 
-    </ion-content>
-    <ion-footer>
-      <!-- Nada no footer -->
-    </ion-footer>
+          <ion-item>
+            <ion-icon name="clipboard" slot="start" color="tertiary"></ion-icon>
+            <ion-label>Finalidade: {{product.finalidade}}</ion-label>
+          </ion-item>
+
+          <ion-item class="activated">
+            <ion-icon name="home" slot="start" color="warning"></ion-icon>
+            <ion-label>Condomínio: {{ product.valor_condominio | currency: 'BRL' }}</ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="cart" slot="start" color="primary"></ion-icon>
+            <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label>
+          </ion-item>
+
+        </ion-card>
+
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="presentAlertConfirmDelete(product.id)">
+          <ion-icon slot="top" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="construct"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button color="light" routerLink="/profile">
+        <ion-icon name="person"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="danger" (click)="presentAlertConfirmLogout()">
+        <ion-icon name="power"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="top">
+      <ion-fab-button color="warning" routerLink="/details">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
+<ion-footer>
+  <!-- Nada no footer -->
+</ion-footer>

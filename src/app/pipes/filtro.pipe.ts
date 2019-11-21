@@ -15,10 +15,12 @@ export class FiltroPipe implements PipeTransform {
     console.log("Pipe-produtos: ", produtos);
 
     return produtos.filter( produto => {
-      return produto.tipo.toLocaleLowerCase().includes(texto)
-             || produto.status.toLocaleLowerCase().includes(texto)
-             || produto.bairro.toLocaleLowerCase().includes(texto);
+      return produto.finalidade.toLocaleLowerCase().includes(texto);
     });
+    /* 
+             || produto.status.toLocaleLowerCase().includes(texto)
+             || produto.bairro.toLocaleLowerCase().includes(texto)
+    */
 
   }
 
