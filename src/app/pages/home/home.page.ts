@@ -44,8 +44,8 @@ export class HomePage implements OnInit {
   //@ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll; -- VOLTAR
 
   // evento carregamento da pagina
-  loadData(event) {
-    setTimeout(() => {
+  async loadData(event) {
+    await setTimeout(() => {
       console.log('Done');
       this.initializeItems();
       event.target.complete();
@@ -127,7 +127,6 @@ export class HomePage implements OnInit {
 
   async filterList(event) {
     console.log("FILTER");
-    //this.initializeItems();
 
     const searchTerm = event.srcElement.value;
     console.log("searchTerm", searchTerm);
