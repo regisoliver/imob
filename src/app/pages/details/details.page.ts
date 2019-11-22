@@ -416,15 +416,6 @@ export class DetailsPage implements OnInit {
         prod[key] = null;
       }
     });
-    if (prod.valor_condominio == "R$") {
-      prod.valor_condominio == null;
-    }
-    if (prod.valor_iptu == "R$") {
-      prod.valor_iptu == null;
-    }
-    if (prod.valor == "R$") {
-      prod.valor == null;
-    }
 
     return prod;
   }

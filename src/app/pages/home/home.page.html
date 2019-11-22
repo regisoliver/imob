@@ -78,12 +78,12 @@
 
           <ion-item class="activated">
             <ion-icon name="home" slot="start" color="warning"></ion-icon>
-            <ion-label>Condomínio: {{ product.valor_condominio }}</ion-label> <!-- | currency: 'BRL'-->
+            <ion-label>Condomínio: {{ product.valor_condominio | currency: 'BRL' }}</ion-label> <!-- | currency: 'BRL'-->
           </ion-item>
 
           <ion-item>
             <ion-icon name="cart" slot="start" color="primary"></ion-icon>
-            <ion-label>Valor: {{ product.valor }}</ion-label> <!-- | currency: 'BRL'-->
+            <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label> <!-- | currency: 'BRL'-->
           </ion-item>
 
         </ion-card>
