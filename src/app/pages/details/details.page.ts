@@ -217,7 +217,9 @@ export class DetailsPage implements OnInit {
   }
 
   uploadFile() {
-    console.log("fez o upload")
+    if (!this.productId) {
+      this.carregaProductToFGroup();
+    }
     this.ngOnInit();
     this.fileButton.nativeElement.click()
   }
@@ -239,35 +241,59 @@ export class DetailsPage implements OnInit {
     data.append('UPLOADCARE_PUB_KEY', 'fd95da9399e52e4f97e0')
 
     if (nomeFinal == "JPG" || nomeFinal == "JPEG" || nomeFinal == "PNG" || nomeFinal == "BMP") {
-      this.http.post('https://upload.uploadcare.com/base/', data)
-        .subscribe(event => {
-          this.imageURL = event.json().file
-          console.log("Subscribe mostrando imageURL: ", this.imageURL);
+      try {
+        this.http.post('https://upload.uploadcare.com/base/', data)
+          .subscribe(event => {
+            this.imageURL = event.json().file
+            console.log("Subscribe mostrando imageURL: ", this.imageURL);
 
-          this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
-          console.log("imagemtotal: ", this.imagemtotal);
+            this.imagemtotal = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
+            console.log("imagemtotal: ", this.imagemtotal);
 
-          if (this.product.images == null) {
-            this.product.images = [];
-          }
-          this.product.images.push(this.imagemtotal)
-          console.log("this.product.images com push: ", this.product.images);
-          this.carregaProductToFGroup();
+            if (this.product.images == null) {
+              this.product.images = [];
+            }
+            this.product.images.push(this.imagemtotal)
+            console.log("this.product.images com push: ", this.product.images);
+            this.carregaProductToFGroup();
 
-          this.loading.dismiss();
-        })
+            this.loading.dismiss();
+          })
+      } catch (error) {
+
+        console.error(error);
+
+      } finally {
+        this.loading.dismiss();
+      }
     } else {
-      this.http.post('https://upload.uploadcare.com/base/', data)
-        .subscribe(event => {
-          this.imageURL = event.json().file
-          this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
-          this.video = files[0].name;
+      try {
+        this.http.post('https://upload.uploadcare.com/base/', data)
+          .subscribe(event => {
+            this.imageURL = event.json().file
+            this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
+            this.video = files[0].name;
 
-          console.log("this.product.video: ", this.product.video);
-          this.carregaProductToFGroup();
+            console.log("this.product.video: ", this.product.video);
+            this.carregaProductToFGroup();
 
-          this.loading.dismiss();
-        })
+            this.loading.dismiss();
+          })
+      } catch (error) {
+        let message: string;
+
+        switch (error.code) {
+          case 'Uploading of these files types is not allowed on your current plan.':
+            message = 'Extensão não suportada';
+            break;
+        }
+
+        console.error(error);
+        this.presentToast(message);
+      } finally {
+        this.loading.dismiss();
+      }
+
     }
 
   }
@@ -390,13 +416,13 @@ export class DetailsPage implements OnInit {
         prod[key] = null;
       }
     });
-    if(prod.valor_condominio == "R$"){
+    if (prod.valor_condominio == "R$") {
       prod.valor_condominio == null;
     }
-    if(prod.valor_iptu == "R$"){
+    if (prod.valor_iptu == "R$") {
       prod.valor_iptu == null;
     }
-    if(prod.valor == "R$"){
+    if (prod.valor == "R$") {
       prod.valor == null;
     }
 
@@ -533,7 +559,7 @@ export class DetailsPage implements OnInit {
   }
 
   async presentToast(message: string) {
-    const toast = await this.toastCtrl.create({ message, duration: 2000 });
+    const toast = await this.toastCtrl.create({ message, duration: 3000 });
     toast.present();
   }
 
