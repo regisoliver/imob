@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+import { NgxMaskIonicModule } from 'ngx-mask-ionic'
 
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
@@ -26,7 +27,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     HttpClientJsonpModule,
+    NgxMaskIonicModule,
   ],
   declarations: [DetailsPage]
 })
-export class DetailsPageModule {}
+export class DetailsPageModule { }

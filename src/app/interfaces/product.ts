@@ -7,9 +7,9 @@ export interface Product {
     dormitorios?: number;
     suites?: number;
     finalidade?: string;
-    valor_condominio?: number;
-    valor_iptu?: number;
-    valor?: number;
+    valor_condominio?: string;
+    valor_iptu?: string;
+    valor?: string;
     //endereco
     endereco?: string;
     bairro?: string;
@@ -19,7 +19,8 @@ export interface Product {
     observacao?: string;
     //proprietario
     proprietario?: string;
-    telefone?: number;
+    telefone?: string;
+    celular?: string;
     permuta?: string;
     aniversario?: number;
     canal?: string;

@@ -27,6 +27,8 @@ import { File } from '@ionic-native/file/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 
+import { NgxMaskIonicModule } from 'ngx-mask-ionic'
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -41,12 +43,13 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
     IonicSelectableModule,
     IonicStorageModule.forRoot(),
     HttpClientModule,
-    HttpModule
+    HttpModule,
+    NgxMaskIonicModule.forRoot()
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    Camera ,File ,WebView, AngularFireStorage,
+    Camera, File, WebView, AngularFireStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Keyboard,
     SocialSharing,

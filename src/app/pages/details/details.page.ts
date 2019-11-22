@@ -96,7 +96,8 @@ export class DetailsPage implements OnInit {
       'area_util': [null],
       'area_total': [null],
       'proprietario': [null, Validators.required],
-      'telefone': [null, Validators.required],
+      'telefone': [null],
+      'celular': [null],
       'permuta': [null],
       'aniversario': [null],
       'canal': [null],
@@ -369,6 +370,7 @@ export class DetailsPage implements OnInit {
       area_total: this.product.area_total,
       proprietario: this.product.proprietario,
       telefone: this.product.telefone,
+      celular: this.product.celular,
       permuta: this.product.permuta,
       aniversario: this.product.aniversario,
       canal: this.product.canal,
@@ -388,6 +390,15 @@ export class DetailsPage implements OnInit {
         prod[key] = null;
       }
     });
+    if(prod.valor_condominio == "R$"){
+      prod.valor_condominio == null;
+    }
+    if(prod.valor_iptu == "R$"){
+      prod.valor_iptu == null;
+    }
+    if(prod.valor == "R$"){
+      prod.valor == null;
+    }
 
     return prod;
   }
@@ -408,6 +419,7 @@ export class DetailsPage implements OnInit {
     this.product.area_total = this.fGroup.value['area_total'];
     this.product.proprietario = this.fGroup.value['proprietario'];
     this.product.telefone = this.fGroup.value['telefone'];
+    this.product.celular = this.fGroup.value['celular'];
     this.product.permuta = this.fGroup.value['permuta'];
     this.product.aniversario = this.fGroup.value['aniversario'];
     this.product.canal = this.fGroup.value['canal'];
@@ -436,6 +448,7 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('area_total').setValue(this.product.area_total);
       this.fGroup.get('proprietario').setValue(this.product.proprietario);
       this.fGroup.get('telefone').setValue(this.product.telefone);
+      this.fGroup.get('celular').setValue(this.product.celular);
       this.fGroup.get('permuta').setValue(this.product.permuta);
       this.fGroup.get('aniversario').setValue(this.product.aniversario);
       this.fGroup.get('canal').setValue(this.product.canal);

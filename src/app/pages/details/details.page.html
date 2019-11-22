@@ -77,15 +77,15 @@
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor Condominio:</ion-label>
-        <ion-input type="number" formControlName="valor_condominio"></ion-input>
+        <ion-input type="text" prefix="R$" mask="000.000.000.000.00" formControlName="valor_condominio"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor IPTU:</ion-label>
-        <ion-input type="number" formControlName="valor_iptu"></ion-input>
+        <ion-input type="text" prefix="R$" mask="000.000.000.000.00" formControlName="valor_iptu"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor do Imovel:</ion-label>
-        <ion-input type="number" formControlName="valor"></ion-input>
+        <ion-input type="text" prefix="R$" mask="000.000.000.000.00" formControlName="valor"></ion-input>
       </ion-item>
     </ion-list>
     <ion-item-divider>
@@ -127,7 +127,11 @@
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Telefone:</ion-label>
-        <ion-input type="tel" placeholder="(  )_____-_____" formControlName="telefone"></ion-input>
+        <ion-input formControlName="telefone" mask="(00) 0000-0000" placeholder="(00) 0000-0000" type="tel" maxlength="14"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" fixed>Celular:</ion-label>
+        <ion-input formControlName="celular" mask="(00) 0 0000-0000" placeholder="(00) 0 0000-0000" type="tel" maxlength="18"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary">Aceita Permuta:</ion-label>
