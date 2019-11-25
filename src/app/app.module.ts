@@ -29,6 +29,8 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 import { NgxMaskIonicModule } from 'ngx-mask-ionic'
 
+import { BrMaskerModule } from 'br-mask';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -44,7 +46,8 @@ import { NgxMaskIonicModule } from 'ngx-mask-ionic'
     IonicStorageModule.forRoot(),
     HttpClientModule,
     HttpModule,
-    NgxMaskIonicModule.forRoot()
+    NgxMaskIonicModule.forRoot(),
+    BrMaskerModule
   ],
   providers: [
     StatusBar,

@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import { NgxMaskIonicModule } from 'ngx-mask-ionic'
+import { NgxMaskIonicModule } from 'ngx-mask-ionic';
+import { BrMaskerModule } from 'br-mask';
 
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
@@ -28,6 +29,7 @@ const routes: Routes = [
     HttpClientModule,
     HttpClientJsonpModule,
     NgxMaskIonicModule,
+    BrMaskerModule,
   ],
   declarations: [DetailsPage]
 })

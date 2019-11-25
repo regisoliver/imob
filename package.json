@@ -37,6 +37,7 @@
     "@ionic/angular": "^4.11.2",
     "@ionic/storage": "^2.2.0",
     "angularfire2": "^5.2.1",
+    "br-mask": "0.0.8",
     "brower": "0.0.2",
     "cordova-android": "^8.1.0",
     "cordova-browser": "6.0.0",
