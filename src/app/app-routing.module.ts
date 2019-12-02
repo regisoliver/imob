@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'details/:id', loadChildren: './pages/details/details.module#DetailsPageModule', canActivate: [AuthGuard] },
   { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule', canActivate: [AuthGuard] },
   { path: 'images', loadChildren: './pages/images/images.module#ImagesPageModule', canActivate: [AuthGuard] },
-  { path: 'modal-perfil', loadChildren: './pages/modal-perfil/modal-perfil.module#ModalPerfilPageModule', canActivate: [AuthGuard] }
+  { path: 'modal-perfil', loadChildren: './pages/modal-perfil/modal-perfil.module#ModalPerfilPageModule', canActivate: [AuthGuard] },
+  { path: 'relatorio', loadChildren: './pages/relatorio/relatorio.module#RelatorioPageModule', canActivate: [AuthGuard] }
 ];
 
 @NgModule({

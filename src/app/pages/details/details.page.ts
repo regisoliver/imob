@@ -31,7 +31,6 @@ export class DetailsPage implements OnInit {
   public lazer: string;
   public churrasqueira: string;
   public videofinal: any = {};
-  public usuario: User = {};
   public id: string = null;
 
   //variaveis do Upload Images
@@ -61,6 +60,11 @@ export class DetailsPage implements OnInit {
 
   private productId: string = null;
   public product: Product = {};
+  public usuario: User = {};
+  public userID: string;
+  public logado: User = {};
+  public todosUsers = new Array<User>();
+  public userFixo: string;
   private loading: any;
   private productSubscription: Subscription;
 
@@ -217,10 +221,6 @@ export class DetailsPage implements OnInit {
   }
 
   uploadFile() {
-    if (!this.productId) {
-      this.carregaProductToFGroup();
-    }
-    this.ngOnInit();
     this.fileButton.nativeElement.click()
   }
 
@@ -229,6 +229,9 @@ export class DetailsPage implements OnInit {
     console.log(event)
 
     this.presentLoading();
+
+    this.carregaProductToFGroup();
+    console.log("this.product 1: ", this.product);
 
     const files = event.target.files
     let Array = files[0].name.split(".");
@@ -253,18 +256,21 @@ export class DetailsPage implements OnInit {
             if (this.product.images == null) {
               this.product.images = [];
             }
-            this.product.images.push(this.imagemtotal)
-            console.log("this.product.images com push: ", this.product.images);
-            this.carregaProductToFGroup();
+            this.product.images.push(this.imagemtotal);
+
+            if (this.productId) {
+              if (this.logado.isAdmin == false && this.logado.codigo != this.product.corretor) {
+                console.log("finally: ", this.fGroup.get('proprietario'));
+                this.fGroup.get('proprietario').setValue(null);
+                this.fGroup.get('telefone').setValue(null);
+                this.fGroup.get('celular').setValue(null);
+              }
+            }
 
             this.loading.dismiss();
           })
       } catch (error) {
-
         console.error(error);
-
-      } finally {
-        this.loading.dismiss();
       }
     } else {
       try {
@@ -274,9 +280,14 @@ export class DetailsPage implements OnInit {
             this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
             this.video = files[0].name;
 
-            console.log("this.product.video: ", this.product.video);
-            this.carregaProductToFGroup();
-
+            if (this.productId) {
+              if (this.logado.isAdmin == false && this.logado.codigo != this.product.corretor) {
+                console.log("finally: ", this.fGroup.get('proprietario'));
+                this.fGroup.get('proprietario').setValue(null);
+                this.fGroup.get('telefone').setValue(null);
+                this.fGroup.get('celular').setValue(null);
+              }
+            }
             this.loading.dismiss();
           })
       } catch (error) {
@@ -290,10 +301,7 @@ export class DetailsPage implements OnInit {
 
         console.error(error);
         this.presentToast(message);
-      } finally {
-        this.loading.dismiss();
       }
-
     }
 
   }
@@ -445,11 +453,15 @@ export class DetailsPage implements OnInit {
     this.product.detalhe_dois = this.fGroup.value['detalhe_dois'];
     this.product.detalhe_tres = this.fGroup.value['detalhe_tres'];
     this.product.observacao = this.fGroup.value['observacao'];
-    this.product.corretor = this.authService.getAuth().currentUser.uid;
+    //this.product.corretor = this.authService.getAuth().currentUser.uid;
   }
 
   ngOnInit() {
     setTimeout(() => {
+      if (this.product.corretor) this.loadUser();
+      this.getTotalUsers();
+      this.loadLogado();
+
       this.fGroup.get('status').setValue(this.product.status);
       this.fGroup.get('codigo').setValue(this.product.codigo);
       this.fGroup.get('tipo').setValue(this.product.tipo);
@@ -480,7 +492,6 @@ export class DetailsPage implements OnInit {
         this.video = Array[Array.length - 1];
         console.log(this.video);
       }
-      if (this.product.corretor) this.loadUser();
     }, 200);
   }
 
@@ -498,6 +509,37 @@ export class DetailsPage implements OnInit {
   loadUser() {
     this.productSubscription = this.productService.getUser(this.product.corretor).subscribe(data => {
       this.usuario = data;
+      this.userFixo = data.nome;
+    });
+  }
+
+  loadLogado() {
+    this.productService.getUser(this.authService.getAuth().currentUser.uid).subscribe(data => {
+      this.logado = data;
+      console.log("dentro do load logado:", this.logado.isAdmin);
+      if (this.product.corretor != this.logado.codigo) {
+        if (this.logado.isAdmin == false) {
+          this.fGroup.get('proprietario').setValue(null);
+          this.fGroup.get('telefone').setValue(null);
+          this.fGroup.get('celular').setValue(null);
+        }
+      }
+    });
+  }
+
+  getTotalUsers() {
+    this.productService.getUsers().subscribe(data => {
+      this.todosUsers = data;
+    });
+  }
+
+  alteraUser() {
+    this.todosUsers.forEach(doc => {
+      if (doc.nome == this.usuario.nome) {
+        this.userID = doc.codigo;
+        this.usuario = doc;
+        console.log("alterado usuario: ", this.usuario);
+      }
     });
   }
 
@@ -505,40 +547,92 @@ export class DetailsPage implements OnInit {
     await this.presentLoading();
 
     if (this.productId) {
-      try {
+      this.loadProduct();
+      if (this.logado.isAdmin == true) {
+        if (this.usuario.nome == "null") {
+          this.carregaProductToFGroup();
+          const produto = this.criaConstanteProducts();
+          produto.corretor = this.authService.getAuth().currentUser.uid;
+          console.log("PROD 1: ", this.usuario);
+          console.log("PROD 1: ", produto);
+          await this.productService.updateProduct(this.productId, produto);
+
+          await this.loading.dismiss();
+          this.presentToast('Cadastrado com Sucesso.');
+          this.navCtrl.navigateBack('/home');
+        } else {
+          this.carregaProductToFGroup();
+          const produto = this.criaConstanteProducts();
+          this.alteraUser();
+          produto.corretor = this.usuario.codigo;
+          console.log("PROD 2: ", this.usuario);
+          console.log("PROD 2: ", produto);
+          await this.productService.updateProduct(this.productId, produto);
+
+          await this.loading.dismiss();
+          this.presentToast('Cadastrado com Sucesso.');
+          this.navCtrl.navigateBack('/home');
+        }
+      } else if (this.logado.codigo == this.product.corretor) {
         this.carregaProductToFGroup();
-        //this.product.foto = JSON.stringify(this.product.images);
-
-        //this.product.images = [];
         const produto = this.criaConstanteProducts();
+        produto.corretor = this.authService.getAuth().currentUser.uid;
         await this.productService.updateProduct(this.productId, produto);
-        await this.loading.dismiss();
+        console.log("novo PROD: ", this.usuario);
+        console.log("novo PROD: ", produto);
 
+        await this.loading.dismiss();
+        this.presentToast('Cadastrado com Sucesso.');
         this.navCtrl.navigateBack('/home');
-      } catch (error) {
-        this.presentToast('Erro ao tentar salvar');
+      } else {
+        this.presentToast('Você não pode Alterar esse Imóvel');
         this.loading.dismiss();
       }
     } else {
       this.product.data_entrada = new Date().getTime();
-
       try {
         this.carregaProductToFGroup();
-        //this.product.foto = JSON.stringify(this.product.images);
-        //console.log("json: ", this.product.foto);
 
-        //this.product.images = [];
-        const produto = this.criaConstanteProducts();
-        console.log("PROD: ", produto);
+        if (this.logado.isAdmin == true) {
+          if (this.usuario.nome == "null") {
+            const produto = this.criaConstanteProducts();
+            produto.corretor = this.authService.getAuth().currentUser.uid;
+            console.log("iqual novo PROD: ", this.usuario);
+            console.log("iqual novo PROD: ", produto);
+            await this.productService.addProduct(produto);
 
-        await this.productService.addProduct(produto);
+            await this.loading.dismiss();
+            this.presentToast('Cadastrado com Sucesso.');
+            this.navCtrl.navigateBack('/home');
+          } else {
+            const produto = this.criaConstanteProducts();
+            this.alteraUser();
+            produto.corretor = this.usuario.codigo;
+            console.log("iqual novo PROD: ", this.usuario);
+            console.log("iqual novo PROD: ", produto);
+            await this.productService.addProduct(produto);
+
+            await this.loading.dismiss();
+            this.presentToast('Cadastrado com Sucesso.');
+            this.navCtrl.navigateBack('/home');
+          }
+        } else {
+          const produto = this.criaConstanteProducts();
+          produto.corretor = this.authService.getAuth().currentUser.uid;
+          await this.productService.addProduct(produto);
+          console.log("novo PROD: ", this.usuario);
+          console.log("novo PROD: ", produto);
+
+          await this.loading.dismiss();
+          this.presentToast('Cadastrado com Sucesso.');
+          this.navCtrl.navigateBack('/home');
+        }
+
         await this.loading.dismiss();
-
-        this.presentToast('Cadastrado com Suesso.');
-        this.navCtrl.navigateBack('/home');
       } catch (error) {
+        console.log(error);
+        console.error(error);
         this.presentToast('Erro ao tentar salvar');
-        console.log(error)
         await this.loading.dismiss();
       }
     }

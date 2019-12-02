@@ -39,6 +39,7 @@
     "angularfire2": "^5.2.1",
     "br-mask": "0.0.8",
     "brower": "0.0.2",
+    "chart.js": "^2.9.3",
     "cordova-android": "^8.1.0",
     "cordova-browser": "6.0.0",
     "cordova-ios": "^5.0.1",

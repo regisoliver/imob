@@ -78,12 +78,12 @@
 
           <ion-item class="activated">
             <ion-icon name="home" slot="start" color="warning"></ion-icon>
-            <ion-label>Condomínio: {{ product.valor_condominio | currency: 'BRL' }}</ion-label> <!-- | currency: 'BRL'-->
+            <ion-label>Condomínio: {{ product.valor_condominio }}</ion-label> <!-- | currency: 'BRL'-->
           </ion-item>
 
           <ion-item>
             <ion-icon name="cart" slot="start" color="primary"></ion-icon>
-            <ion-label>Valor: {{ product.valor | currency: 'BRL' }}</ion-label> <!-- | currency: 'BRL'-->
+            <ion-label>Valor: {{ product.valor }}</ion-label> <!-- | currency: 'BRL'-->
           </ion-item>
 
         </ion-card>
@@ -105,6 +105,9 @@
     <ion-fab-list side="start">
       <ion-fab-button color="light" routerLink="/profile">
         <ion-icon name="person"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" routerLink="/relatorio">
+        <ion-icon name="folder-open"></ion-icon>
       </ion-fab-button>
       <ion-fab-button color="danger" (click)="presentAlertConfirmLogout()">
         <ion-icon name="power"></ion-icon>

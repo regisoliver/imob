@@ -78,6 +78,7 @@ export class LoginPage implements OnInit {
 
       delete newUserObject.password;
       newUserObject.isAdmin = false;
+      newUserObject.codigo = this.authService.getAuth().currentUser.uid;
 
       console.log(newUser);
       await this.afs.collection('Users').doc(newUser.user.uid).set(newUserObject);

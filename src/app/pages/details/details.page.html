@@ -16,14 +16,23 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="fGroup">
-    <ion-item-divider *ngIf="this.productId != null">
+    <ion-item-divider>
       <ion-label>
         <b>Detalhes do Corretor</b>
       </ion-label>
     </ion-item-divider>
-    <ion-list *ngIf="this.productId != null">
+    <ion-list>
       <ion-item>
-        <ion-label color="primary">Nome Corretor: </ion-label>{{usuario.nome}}
+        <ion-label color="primary">Corretor Atual: </ion-label>{{userFixo}}
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Alterar Corretor: </ion-label>
+        <ion-select placeholder="Corretor" [(ngModel)]="usuario.nome" [ngModelOptions]="{standalone: true}"
+          [disabled]="logado.isAdmin != true">
+          <ion-select-option value="null">Nenhum</ion-select-option>
+          <ion-select-option *ngFor="let item of todosUsers" value="{{item.nome}}">{{item.nome}}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
     </ion-list>
     <ion-item-divider>
@@ -77,15 +86,18 @@
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor Condominio:</ion-label>
-        <ion-input type="text" formControlName="valor_condominio" [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}"></ion-input>
+        <ion-input type="text" formControlName="valor_condominio"
+          [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor IPTU:</ion-label>
-        <ion-input type="text" formControlName="valor_iptu" [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}"></ion-input>
+        <ion-input type="text" formControlName="valor_iptu"
+          [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary" fixed>Valor do Imovel:</ion-label>
-        <ion-input type="text" formControlName="valor" [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}">
+        <ion-input type="text" formControlName="valor"
+          [brmasker]="{money: true, thousand: '.',  decimalCaracter: ',', decimal: '2'}">
         </ion-input>
       </ion-item>
     </ion-list>
@@ -124,6 +136,7 @@
     </ion-item-divider>
     <ion-list>
       <ion-item>
+        <ion-label color="primary" fixed>Proprietário:</ion-label>
         <ion-input type="text" placeholder="Proprietário" formControlName="proprietario"></ion-input>
       </ion-item>
       <ion-item>
