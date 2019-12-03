@@ -26,12 +26,13 @@ export class DetailsPage implements OnInit {
 
   //sharing
   public mensagem: string;
-  public fotos: any = {};
+  public fotos: string[];
   public piscina: string;
   public lazer: string;
   public churrasqueira: string;
   public videofinal: any = {};
   public id: string = null;
+  public primeiraFoto: string;
 
   //variaveis do Upload Images
   imageURL: string
@@ -180,15 +181,24 @@ export class DetailsPage implements OnInit {
     }
 
     this.fotos = [];
+    //this.product.foto = JSON.stringify(this.product.images);
     if (this.product.images != null || this.product.images != undefined) {
-      this.product.images.forEach(obj => (
-        this.fotos.push(obj)
-      ));
+      this.product.images.forEach(obj => {
+        //this.fotos.push(obj.trim().replace(',', " "));
+        this.fotos.push(obj.trim()+" ");
+        //this.fotos.push(JSON.stringify(obj));
+        //this.fotos.push(obj.trim());
+        console.log("1::", obj);
+        console.log("2::", this.fotos);
+      });
     }
+
+    this.primeiraFoto = this.fotos[0];
 
     console.log(this.mensagem);
     console.log(this.fotos);
     console.log(this.product.video);
+    console.log("Primeira foto: ", this.primeiraFoto);
   }
 
   //Compartilhamento de imovel
@@ -201,7 +211,8 @@ export class DetailsPage implements OnInit {
         if (this.fotos == undefined || this.fotos == null) {
           this.socialSharing.share(this.mensagem, "", "", "");
         } else {
-          this.socialSharing.share(this.mensagem, "", "", this.fotos);
+          //this.socialSharing.shareViaWhatsApp(this.mensagem, "", "");
+          this.socialSharing.share(this.mensagem, "", this.primeiraFoto, this.fotos.toString());
         }
       } else {
         this.socialSharing.share(this.mensagem, "", this.product.video, "");
