@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ToastController, ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { ToastController, ModalController, LoadingController, AlertController, ActionSheetController } from '@ionic/angular';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
@@ -32,7 +32,8 @@ export class ModalPerfilPage implements OnInit {
     private toastCtrl: ToastController,
     private userService: ProductService,
     private loadingCtrl: LoadingController,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public actionSheetController: ActionSheetController
   ) {
     this.id = this.authService.getAuth().currentUser.uid;
     if (this.id) this.loadUser();
@@ -137,34 +138,32 @@ export class ModalPerfilPage implements OnInit {
 
   }
 
-  //ion-alert Alterar FOTO
-  async presentAlertAlterarFoto() {
-    const alert = await this.alertController.create({
-      header: 'Confirmar',
-      message: 'Ação da Foto do Perfil',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-          }
-        }, {
-          text: 'Excluir Foto',
-          handler: () => {
-            this.deletarFoto();
-          }
-        }, {
-          text: 'Alterar Foto',
-          handler: () => {
-            this.uploadFile();
-          }
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Alteração de Perfil',
+      buttons: [{
+        text: 'Alterar Foto',
+        role: 'destructive',
+        icon: 'swap',
+        handler: () => {
+          this.uploadFile();
         }
-      ]
+      }, {
+        text: 'Excluir Foto',
+        icon: 'trash',
+        handler: () => {
+          this.deletarFoto();
+        }
+      }, {
+        text: 'Cancelar',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          //console.log('Cancel clicked');
+        }
+      }]
     });
-
-    await alert.present();
-
+    await actionSheet.present();
   }
 
   async deletarFoto() {

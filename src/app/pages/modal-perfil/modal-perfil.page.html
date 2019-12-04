@@ -12,10 +12,10 @@
     <ion-card>
       <ion-card-header *ngIf="usuario.foto == null">
         <img src="https://ucarecdn.com/6632a73e-6e9a-4092-9138-7b3395c4f96c/perfil.jpg"
-          (click)="presentAlertAlterarFoto()">
+          (click)="presentActionSheet()">
       </ion-card-header>
       <ion-card-header *ngIf="usuario.foto != null">
-        <img src="{{ usuario.foto }}" (click)="presentAlertAlterarFoto()">
+        <img src="{{ usuario.foto }}" (click)="presentActionSheet()">
       </ion-card-header>
     </ion-card>
 
