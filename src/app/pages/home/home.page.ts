@@ -6,6 +6,7 @@ import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class HomePage implements OnInit {
   private loading: any;
   public products = new Array<Product>();
   private productsSubscription: Subscription;
+  public logado: User = {};
 
   //search
   public prodList: Product[];
@@ -33,11 +35,20 @@ export class HomePage implements OnInit {
     public alertController: AlertController,
   ) {
     this.carregaProdutoOriginal();
+    this.loadLogado();
   }
 
   carregaProdutoOriginal() {
     this.productsSubscription = this.productsService.getProducts().subscribe(data => {
       this.products = data;
+    });
+  }
+
+  loadLogado() {
+    this.productsService.getUser(this.authService.getAuth().currentUser.uid).subscribe(data => {
+      this.logado = data;
+      console.log("user Nome:", this.logado.nome);
+      console.log("user Admin:", this.logado.isAdmin);
     });
   }
 
@@ -84,6 +95,7 @@ export class HomePage implements OnInit {
 
   //ion-alert deletar
   async presentAlertConfirmDelete(id: string) {
+    this.loadLogado();
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: 'Deletar Imovel ?',
@@ -170,16 +182,30 @@ export class HomePage implements OnInit {
   }
 
   async deleteProduct(id: string) {
-    try {
-      await this.productsService.deleteProduct(id);
-    } catch (error) {
-      this.presentToast('Erro ao tentar deletar');
-      console.log(error);
+    await this.presentLoading();
+    console.log("delete nome:", this.logado.nome);
+    console.log("delete admin:", this.logado.isAdmin);
+    if (this.logado.isAdmin == true) {
+      try {
+        await this.productsService.deleteProduct(id);
+        this.loading.dismiss();
+        this.presentToast("<b>Produto Deletado</b>");
+      } catch (error) {
+        this.loading.dismiss();
+        this.presentToast('Erro ao tentar deletar');
+        console.log(error);
+      }
+    }else{
+      this.loading.dismiss();
+      this.presentToast("<b>Permissão</b>\n\nVocê não tem Permissão para Deletar.");
     }
   }
 
   async presentToast(message: string) {
-    const toast = await this.toastCtrl.create({ message, duration: 2000 });
+    const toast = await this.toastCtrl.create({ 
+      message,
+      position: 'middle',
+      duration: 4000 });
     toast.present();
   }
 

@@ -10,6 +10,11 @@
 
 <ion-content>
 
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="crescent" refreshingText="Atualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <ion-list *ngIf="!products.length">
     <ion-item *ngFor="let item of [0, 1, 2, 3, 4, 5]">
       <ion-avatar slot="start">
@@ -29,12 +34,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="crescent" refreshingText="Atualizando...">
-    </ion-refresher-content>
-  </ion-refresher>
-
-  <ion-list>
+  <ion-list *ngIf="products.length > 0">
     <ion-item-sliding *ngFor="let product of products">
       <ion-item button [routerLink]="['/details', product.id]">
         <ion-card>

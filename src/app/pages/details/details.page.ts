@@ -33,6 +33,7 @@ export class DetailsPage implements OnInit {
   public videofinal: any = {};
   public id: string = null;
   public primeiraFoto: string;
+  public buttonDisabled: any;
 
   //variaveis do Upload Images
   imageURL: string
@@ -192,8 +193,11 @@ export class DetailsPage implements OnInit {
         console.log("2::", this.fotos);
       });
     }
-
-    this.primeiraFoto = this.fotos[0];
+    if (this.fotos.length) {
+      this.primeiraFoto = this.fotos[0];
+    } else {
+      this.primeiraFoto = "https://ucarecdn.com/bd144f77-1aed-4458-a73d-9abbf2b41d7a/logooriginal.jpeg";
+    }
 
     console.log(this.mensagem);
     console.log(this.fotos);
@@ -209,7 +213,7 @@ export class DetailsPage implements OnInit {
 
       if (this.product.video == undefined || this.product.video == null) {
         if (this.fotos == undefined || this.fotos == null) {
-          this.socialSharing.share(this.mensagem, "", "", "");
+          this.socialSharing.share(this.mensagem, "", this.primeiraFoto, "");
         } else {
           this.socialSharing.share(this.mensagem, "", this.primeiraFoto, this.fotos.toString());
         }
@@ -221,7 +225,7 @@ export class DetailsPage implements OnInit {
       await this.loading.dismiss();
     } else {
       await this.loading.dismiss();
-      this.presentToast('Compartilhe um Imóvel Cadastrado.');
+      this.presentToast('<b>Compartilhe um Imóvel Cadastrado.</b>');
     }
   }
 
@@ -238,11 +242,10 @@ export class DetailsPage implements OnInit {
 
   fileChanged(event) {
     console.log("fez o fileChanged")
-    console.log(event)
 
     this.presentLoading();
 
-    this.carregaProductToFGroup();
+    this.carregaFGroupToProducts();
     console.log("this.product 1: ", this.product);
 
     const files = event.target.files
@@ -270,14 +273,16 @@ export class DetailsPage implements OnInit {
             }
             this.product.images.push(this.imagemtotal);
 
+            /*
             if (this.productId) {
               if (this.logado.isAdmin == false && this.logado.codigo != this.product.corretor) {
-                console.log("finally: ", this.fGroup.get('proprietario'));
+                console.log("finally 1: ", this.fGroup.get('proprietario'));
                 this.fGroup.get('proprietario').setValue(null);
                 this.fGroup.get('telefone').setValue(null);
                 this.fGroup.get('celular').setValue(null);
               }
             }
+            */
 
             this.loading.dismiss();
           })
@@ -292,14 +297,17 @@ export class DetailsPage implements OnInit {
             this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
             this.video = files[0].name;
 
+            /*
             if (this.productId) {
               if (this.logado.isAdmin == false && this.logado.codigo != this.product.corretor) {
-                console.log("finally: ", this.fGroup.get('proprietario'));
+                console.log("finally 2: ", this.fGroup.get('proprietario'));
                 this.fGroup.get('proprietario').setValue(null);
                 this.fGroup.get('telefone').setValue(null);
                 this.fGroup.get('celular').setValue(null);
               }
             }
+            */
+
             this.loading.dismiss();
           })
       } catch (error) {
@@ -440,7 +448,7 @@ export class DetailsPage implements OnInit {
     return prod;
   }
 
-  carregaProductToFGroup() {
+  carregaFGroupToProducts() {
     this.product.status = this.fGroup.value['status'];
     this.product.codigo = this.fGroup.value['codigo'];
     this.product.tipo = this.fGroup.value['tipo'];
@@ -529,13 +537,18 @@ export class DetailsPage implements OnInit {
     this.productService.getUser(this.authService.getAuth().currentUser.uid).subscribe(data => {
       this.logado = data;
       console.log("dentro do load logado:", this.logado.isAdmin);
-      if (this.product.corretor != this.logado.codigo) {
-        if (this.logado.isAdmin == false) {
-          this.fGroup.get('proprietario').setValue(null);
-          this.fGroup.get('telefone').setValue(null);
-          this.fGroup.get('celular').setValue(null);
+      if (this.productId) {
+        if (this.product.corretor != this.logado.codigo) {
+          if (this.logado.isAdmin == false) {
+            this.fGroup.get('proprietario').setValue(null);
+            this.fGroup.get('telefone').setValue(null);
+            this.fGroup.get('celular').setValue(null);
+            this.buttonDisabled = true;
+            console.log("disabled:", this.buttonDisabled);
+          }
         }
       }
+
     });
   }
 
@@ -555,55 +568,62 @@ export class DetailsPage implements OnInit {
     });
   }
 
+  volta3FGroup() {
+    this.fGroup.get('proprietario').setValue(this.product.proprietario);
+    this.fGroup.get('telefone').setValue(this.product.telefone);
+    this.fGroup.get('celular').setValue(this.product.celular);
+  }
+
   async saveProduct() {
     await this.presentLoading();
 
     if (this.productId) {
       this.loadProduct();
+      this.volta3FGroup();
       if (this.logado.isAdmin == true) {
         if (this.usuario.nome == "null") {
-          this.carregaProductToFGroup();
+          this.carregaFGroupToProducts();
           const produto = this.criaConstanteProducts();
           produto.corretor = this.authService.getAuth().currentUser.uid;
           console.log("PROD 1: ", this.usuario);
           console.log("PROD 1: ", produto);
-          await this.productService.updateProduct(this.productId, produto);
+          //await this.productService.updateProduct(this.productId, produto);
 
           await this.loading.dismiss();
-          this.presentToast('Cadastrado com Sucesso.');
+          this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
           this.navCtrl.navigateBack('/home');
         } else {
-          this.carregaProductToFGroup();
+          this.carregaFGroupToProducts();
           const produto = this.criaConstanteProducts();
           this.alteraUser();
           produto.corretor = this.usuario.codigo;
           console.log("PROD 2: ", this.usuario);
           console.log("PROD 2: ", produto);
-          await this.productService.updateProduct(this.productId, produto);
+          //await this.productService.updateProduct(this.productId, produto);
 
           await this.loading.dismiss();
-          this.presentToast('Cadastrado com Sucesso.');
+          this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
           this.navCtrl.navigateBack('/home');
         }
       } else if (this.logado.codigo == this.product.corretor) {
-        this.carregaProductToFGroup();
+        this.carregaFGroupToProducts();
         const produto = this.criaConstanteProducts();
         produto.corretor = this.authService.getAuth().currentUser.uid;
-        await this.productService.updateProduct(this.productId, produto);
+        //await this.productService.updateProduct(this.productId, produto);
         console.log("novo PROD: ", this.usuario);
         console.log("novo PROD: ", produto);
 
         await this.loading.dismiss();
-        this.presentToast('Cadastrado com Sucesso.');
+        this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
         this.navCtrl.navigateBack('/home');
       } else {
-        this.presentToast('Você não pode Alterar esse Imóvel');
+        this.presentToast('<b> ★ Você não pode Alterar esse Imóvel</b>');
         this.loading.dismiss();
       }
     } else {
       this.product.data_entrada = new Date().getTime();
       try {
-        this.carregaProductToFGroup();
+        this.carregaFGroupToProducts();
 
         if (this.logado.isAdmin == true) {
           if (this.usuario.nome == "null") {
@@ -611,10 +631,10 @@ export class DetailsPage implements OnInit {
             produto.corretor = this.authService.getAuth().currentUser.uid;
             console.log("iqual novo PROD: ", this.usuario);
             console.log("iqual novo PROD: ", produto);
-            await this.productService.addProduct(produto);
+            //await this.productService.addProduct(produto);
 
             await this.loading.dismiss();
-            this.presentToast('Cadastrado com Sucesso.');
+            this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
             this.navCtrl.navigateBack('/home');
           } else {
             const produto = this.criaConstanteProducts();
@@ -622,21 +642,21 @@ export class DetailsPage implements OnInit {
             produto.corretor = this.usuario.codigo;
             console.log("iqual novo PROD: ", this.usuario);
             console.log("iqual novo PROD: ", produto);
-            await this.productService.addProduct(produto);
+            //await this.productService.addProduct(produto);
 
             await this.loading.dismiss();
-            this.presentToast('Cadastrado com Sucesso.');
+            this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
             this.navCtrl.navigateBack('/home');
           }
         } else {
           const produto = this.criaConstanteProducts();
           produto.corretor = this.authService.getAuth().currentUser.uid;
-          await this.productService.addProduct(produto);
+          //await this.productService.addProduct(produto);
           console.log("novo PROD: ", this.usuario);
           console.log("novo PROD: ", produto);
 
           await this.loading.dismiss();
-          this.presentToast('Cadastrado com Sucesso.');
+          this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
           this.navCtrl.navigateBack('/home');
         }
 
@@ -656,7 +676,11 @@ export class DetailsPage implements OnInit {
   }
 
   async presentToast(message: string) {
-    const toast = await this.toastCtrl.create({ message, duration: 3000 });
+    const toast = await this.toastCtrl.create({
+      message,
+      position: 'middle',
+      duration: 4000
+    });
     toast.present();
   }
 

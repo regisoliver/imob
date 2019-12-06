@@ -205,7 +205,7 @@
       </ion-item>
     </ion-list>
     <ion-list>
-      <ion-button shape="round" color="primary" (click)="uploadFile()" expand="block">
+      <ion-button name="upfile" shape="round" color="primary" (click)="uploadFile()" expand="block" [disabled]="buttonDisabled">
         Adicionar Fotos / Vídeos
       </ion-button>
       <ion-item>

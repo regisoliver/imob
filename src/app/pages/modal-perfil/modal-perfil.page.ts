@@ -113,7 +113,7 @@ export class ModalPerfilPage implements OnInit {
     }
   }
 
-  //ion-alert Delete VIDEO
+  //ion-alert Altera Perfil
   async presentAlertAlteraPerfil() {
     const alert = await this.alertController.create({
       header: 'Confirmar',
