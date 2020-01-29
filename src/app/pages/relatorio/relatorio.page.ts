@@ -26,14 +26,16 @@ export class RelatorioPage implements OnInit {
   public product: any;
   public contagem: number = 0;
   public tipos: any = {};
-  public contaTotal: number = 0;
+  public somenteTipos: any = {};
+  public contaTotal: number = 1;
 
   constructor(
     private authService: AuthService,
     private productService: ProductService,
     public fs: AngularFirestore
   ) {
-
+    this.tipos = [];
+    this.somenteTipos = [];
     this.contaTodosProducts();
 
   }
@@ -41,27 +43,44 @@ export class RelatorioPage implements OnInit {
   contaTodosProducts() {
     const prod = this.filtroTipos();
     this.fs.collection('Products').valueChanges().subscribe(prodList => {
+
       prodList.forEach(Obj => {
         this.contagem += 1;
-        this.contaTotal = 0;
-        Object.keys(prod).forEach(key => {
-          if (prod[key] === Obj["tipo"]) {
-            console.log("element: ", prod[key]);
-            console.log("Obj: ", Obj["tipo"]);
-            console.log("key: ", key);
+        this.tipos.push(
+          { 'tipo': Obj["tipo"] }, { 'this.contaTotal': this.contaTotal }, { 'status': Obj["status"] }
+        );
+        //console.log("tipos1: ", this.tipos["tipo"]);
+        //console.log("tipos1: ", this.tipos["this.contaTotal"]);
+        //console.log("tipos1: ", this.tipos["status"]);
+        
+        /*
+        this.tipos.forEach(elemento => {
+          if (Obj["tipo"] === elemento["tipo"]) {
 
-            if (this.tipos == null) {
-              this.tipos = [];
-              //this.tipos.push({key});
-            }else{
-              //this.tipos.push({key, contaTotal});
+            if (!this.somenteTipos) {
+              console.log("vazio", this.somenteTipos);
+            } else {
+              console.log("cheio", this.somenteTipos);
             }
+
+            this.somenteTipos.push(
+              Obj["tipo"], this.contaTotal
+            )
+
+            console.log("elemento 1: ", elemento["tipo"]);
+            console.log("this.contaTotal 2: ", elemento["this.contaTotal"]);
+            console.log("Obj 3: ", Obj["tipo"]);
           }
-          console.log("tipos: ", this.tipos);
-
+          console.log("elemento: ", elemento["tipo"]);
+          console.log("this.contaTotal: ", elemento["this.contaTotal"]);
+          console.log("Obj: ", Obj["tipo"]);
         });
+        */
 
+        
       });
+      console.log("tipos 5: ", this.tipos);
+
     })
   }
 

@@ -287,16 +287,18 @@ export class DetailsPage implements OnInit {
             this.loading.dismiss();
           })
       } catch (error) {
+        console.log("entrou no erro de foto");
         console.error(error);
       }
     } else {
+      console.log("entrou no 2 fluxo");
       try {
         this.http.post('https://upload.uploadcare.com/base/', data)
           .subscribe(event => {
             this.imageURL = event.json().file
             this.product.video = "https://ucarecdn.com/" + this.imageURL + "/" + files[0].name;
             this.video = files[0].name;
-
+            console.log("pegou o video", this.video);
             /*
             if (this.productId) {
               if (this.logado.isAdmin == false && this.logado.codigo != this.product.corretor) {
@@ -311,18 +313,47 @@ export class DetailsPage implements OnInit {
             this.loading.dismiss();
           })
       } catch (error) {
+        console.log("entrou no erro de video");
         let message: string;
 
         switch (error.code) {
           case 'Uploading of these files types is not allowed on your current plan.':
             message = 'Extensão não suportada';
             break;
+
+          case 'Bad Request':
+            message = 'Extensão não suportada';
+            break;
+
+          case 'File is too large.':
+            message = 'File is too large.';
+            break;
+        }
+        switch (error.statusText) {
+          case 'Bad Request':
+            message = 'Extensão não suportada';
+            break;
+        }
+        switch (error._body) {
+          case 'File is too large.':
+            message = 'File is too large.';
+            break;
+        }
+
+        if (message == null || message == "") {
+          message = "Erro ao adicionar esta extenção";
+          this.presentToast(message);
         }
 
         console.error(error);
         this.presentToast(message);
+        this.loading.dismiss();
+      } finally {
+        this.loading.dismiss();
       }
     }
+
+    this.loading.dismiss();
 
   }
 
@@ -587,7 +618,7 @@ export class DetailsPage implements OnInit {
           produto.corretor = this.authService.getAuth().currentUser.uid;
           console.log("PROD 1: ", this.usuario);
           console.log("PROD 1: ", produto);
-          //await this.productService.updateProduct(this.productId, produto);
+          await this.productService.updateProduct(this.productId, produto);
 
           await this.loading.dismiss();
           this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
@@ -599,7 +630,7 @@ export class DetailsPage implements OnInit {
           produto.corretor = this.usuario.codigo;
           console.log("PROD 2: ", this.usuario);
           console.log("PROD 2: ", produto);
-          //await this.productService.updateProduct(this.productId, produto);
+          await this.productService.updateProduct(this.productId, produto);
 
           await this.loading.dismiss();
           this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
@@ -609,7 +640,7 @@ export class DetailsPage implements OnInit {
         this.carregaFGroupToProducts();
         const produto = this.criaConstanteProducts();
         produto.corretor = this.authService.getAuth().currentUser.uid;
-        //await this.productService.updateProduct(this.productId, produto);
+        await this.productService.updateProduct(this.productId, produto);
         console.log("novo PROD: ", this.usuario);
         console.log("novo PROD: ", produto);
 
@@ -631,7 +662,7 @@ export class DetailsPage implements OnInit {
             produto.corretor = this.authService.getAuth().currentUser.uid;
             console.log("iqual novo PROD: ", this.usuario);
             console.log("iqual novo PROD: ", produto);
-            //await this.productService.addProduct(produto);
+            await this.productService.addProduct(produto);
 
             await this.loading.dismiss();
             this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
@@ -642,7 +673,7 @@ export class DetailsPage implements OnInit {
             produto.corretor = this.usuario.codigo;
             console.log("iqual novo PROD: ", this.usuario);
             console.log("iqual novo PROD: ", produto);
-            //await this.productService.addProduct(produto);
+            await this.productService.addProduct(produto);
 
             await this.loading.dismiss();
             this.presentToast("<b> ★ Cadastrado com Sucesso.</b>");
@@ -651,7 +682,7 @@ export class DetailsPage implements OnInit {
         } else {
           const produto = this.criaConstanteProducts();
           produto.corretor = this.authService.getAuth().currentUser.uid;
-          //await this.productService.addProduct(produto);
+          await this.productService.addProduct(produto);
           console.log("novo PROD: ", this.usuario);
           console.log("novo PROD: ", produto);
 
