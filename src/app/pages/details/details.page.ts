@@ -11,6 +11,8 @@ import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 
 @Component({
   selector: 'app-details',
@@ -41,6 +43,7 @@ export class DetailsPage implements OnInit {
   noFace: boolean = false
   imagemtotal: string
   video: string;
+  images: any = [];
 
   scaleCrop: string = '-/scale_crop/200x200'
 
@@ -83,6 +86,8 @@ export class DetailsPage implements OnInit {
     public afs: AngularFirestore,
     public auth: AuthService,
     private socialSharing: SocialSharing,
+    public file: File,
+    public imagePicker: ImagePicker
   ) {
 
     //form do details.page.ts
@@ -248,7 +253,8 @@ export class DetailsPage implements OnInit {
     this.carregaFGroupToProducts();
     console.log("this.product 1: ", this.product);
 
-    const files = event.target.files
+    // const files = event.target.files
+    const files = event.target.fotos
     let Array = files[0].name.split(".");
     let nomeFinal = Array[Array.length - 1].toUpperCase();
     console.log("nomeFinal: ", nomeFinal);
@@ -737,6 +743,70 @@ export class DetailsPage implements OnInit {
     this.product.video = null;
     await this.loading.dismiss();
   }
+
+  // PickMultipleImages() {
+  //   var options: ImagePicker = {
+
+  //   }
+  //   this.imagePicker.getPictures(options).then((results) => {
+  //     for (var interval = 0; interval < results.length; interval++) {
+  //       let filename = results[interval].substring(results[interval].lastIndexOf('/') + 1);
+  //       let path = results[interval].substring(0, results[interval].lastIndexOf('/') + 1);
+  //       this.file.readAsDataURL(path, filename).then((base64string) => {
+  //         this.images.push(base64string);
+  //         // console.log("ARRAY DE IMAGES ", this.images);
+  //         console.log('Image URI: ' + base64string[interval]);
+  //       })
+  //     }
+  //   })
+  // }
+
+
+  // pickImage() {
+  //   const options: CameraOptions = {
+  //     quality: 100,
+  //     destinationType: this.camera.DestinationType.FILE_URI,
+  //     encodingType: this.camera.EncodingType.JPEG,
+  //     mediaType: this.camera.MediaType.PICTURE
+  //   }
+  //   this.camera.getPicture(options).then((imageData) => {
+  //     // imageData is either a base64 encoded string or a file URI
+  //     // If it's base64 (DATA_URL):
+  //     let base64Image = 'data:image/jpeg;base64,' + imageData;
+  //     console.log("ARRAY DE IMAGES ", base64Image);
+  //     // this.cropImage(imageData)
+  //   }, (err) => {
+  //     // Handle error
+  //   });
+  // }
+
+  PickMultipleImages() {
+    // var options: ImagePickerOptions = {
+    //   maximumImagesCount: 5,
+    //   width:100,
+    //   height:100
+    // }
+    // // this.imagePicker.getPictures()
+
+    // this.imagePicker.getPictures(options).then((results) => {
+    //   for (var i = 0; i < results.length; i++) {
+    //       console.log('Image URI: ' + results[i]);
+    //   }
+    // }, (err) => { });
+
+    window.imagePicker.getPictures(
+      function (results) {
+        for (var i = 0; i < results.length; i++) {
+          console.log('Image URI: ' + results[i]);
+        }
+      }, function (error) {
+        console.log('Error: ' + error);
+      }
+    );
+
+
+  }
+
 
 
 }

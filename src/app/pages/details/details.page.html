@@ -212,6 +212,12 @@
         <input type="file" (change)="fileChanged($event)" class="filebtn" #fileButton [hidden]="true"
           class="ion-hide" />
       </ion-item>
+
+      <ion-button (click)="PickMultipleImages()">
+        Pick Multiple Images
+      </ion-button>
+
+
     </ion-list>
     <ion-item-divider>
       <ion-label>
