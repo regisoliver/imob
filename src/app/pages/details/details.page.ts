@@ -12,7 +12,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
+import { Camera, CameraOptions, CameraPopoverOptions } from '@ionic-native/camera/ngx';
 
 @Component({
   selector: 'app-details',
@@ -87,7 +87,7 @@ export class DetailsPage implements OnInit {
     public auth: AuthService,
     private socialSharing: SocialSharing,
     public file: File,
-    public imagePicker: ImagePicker
+    public camera: Camera
   ) {
 
     //form do details.page.ts
@@ -762,23 +762,24 @@ export class DetailsPage implements OnInit {
   // }
 
 
-  // pickImage() {
-  //   const options: CameraOptions = {
-  //     quality: 100,
-  //     destinationType: this.camera.DestinationType.FILE_URI,
-  //     encodingType: this.camera.EncodingType.JPEG,
-  //     mediaType: this.camera.MediaType.PICTURE
-  //   }
-  //   this.camera.getPicture(options).then((imageData) => {
-  //     // imageData is either a base64 encoded string or a file URI
-  //     // If it's base64 (DATA_URL):
-  //     let base64Image = 'data:image/jpeg;base64,' + imageData;
-  //     console.log("ARRAY DE IMAGES ", base64Image);
-  //     // this.cropImage(imageData)
-  //   }, (err) => {
-  //     // Handle error
-  //   });
-  // }
+  pickImage() {
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      console.log("ARRAY DE IMAGES ", base64Image);
+      // this.cropImage(imageData)
+    }, (err) => {
+      // Handle error
+    });
+  }
 
   PickMultipleImages() {
     // var options: ImagePickerOptions = {
@@ -794,15 +795,7 @@ export class DetailsPage implements OnInit {
     //   }
     // }, (err) => { });
 
-    window.imagePicker.getPictures(
-      function (results) {
-        for (var i = 0; i < results.length; i++) {
-          console.log('Image URI: ' + results[i]);
-        }
-      }, function (error) {
-        console.log('Error: ' + error);
-      }
-    );
+
 
 
   }
