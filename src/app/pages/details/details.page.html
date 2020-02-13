@@ -213,9 +213,22 @@
           class="ion-hide" />
       </ion-item>
 
-      <ion-button (click)="pickImage()">
+      <ion-button (click)="getImages()" expand="block">
         Pick Multiple Images
       </ion-button>
+      <ion-grid>
+        <!-- <ion-row>
+          <ion-col> -->
+            <!-- More Pinterest floating gallery style -->
+            <!-- <div class="images">
+              <div class="one-image" *ngFor="let img of imageResponse">
+                <img src="{{img}}" alt="" srcset="">
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      -->
+      </ion-grid>
 
 
     </ion-list>

@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    public screen: ScreenOrientation
+    public screen: ScreenOrientation,
+    public imagePicker: ImagePicker
   ) {
     this.initializeApp();
   }
