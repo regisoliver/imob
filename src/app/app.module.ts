@@ -28,8 +28,12 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { FilePath } from '@ionic-native/file-path/ngx';
+import { MediaCapture } from '@ionic-native/media-capture/ngx';
+import { Media } from '@ionic-native/media/ngx';
+import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
-import { NgxMaskIonicModule } from 'ngx-mask-ionic'
+import { NgxMaskIonicModule } from 'ngx-mask-ionic';
 
 import { BrMaskerModule } from 'br-mask';
 
@@ -55,6 +59,7 @@ import { BrMaskerModule } from 'br-mask';
     StatusBar,
     SplashScreen,
     ImagePicker, Camera, File, WebView, AngularFireStorage,
+    MediaCapture, Media, StreamingMedia, PhotoViewer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Keyboard,
     SocialSharing,

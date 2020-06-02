@@ -4,17 +4,23 @@ import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/interfaces/product';
 import { User } from 'src/app/interfaces/user';
-import { NavController, LoadingController, ToastController, Platform } from '@ionic/angular';
+import { NavController, LoadingController, ToastController, Platform, ActionSheetController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { File, FileEntry } from '@ionic-native/file/ngx';
 // import { Camera, CameraOptions, CameraPopoverOptions } from '@ionic-native/camera/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
+import { MediaCapture, MediaFile, CaptureError } from '@ionic-native/media-capture/ngx';
+import { Media, MediaObject } from '@ionic-native/media/ngx';
+import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+
+const MEDIA_FOLDER_NAME = 'my_media';
 
 @Component({
   selector: 'app-details',
@@ -26,6 +32,7 @@ export class DetailsPage implements OnInit {
   //image-picker
   imageResponse: any;
   options: any;
+  files = [];
 
   //data-picker product.aniversario
   customYearValues = [2019, 2016, 2008, 2004, 2000, 1996, 1980, 1974, 1970];
@@ -95,7 +102,13 @@ export class DetailsPage implements OnInit {
     public file: File,
     public imagePicker: ImagePicker,
     // public camera: Camera,
-    public filepath: FilePath
+    public filepath: FilePath,
+    private media: Media,
+    private mediaCapture: MediaCapture,
+    private streamingMedia: StreamingMedia,
+    private photoViewer: PhotoViewer,
+    private actionSheetController: ActionSheetController,
+    private plt: Platform
   ) {
 
     //form do details.page.ts
@@ -523,6 +536,18 @@ export class DetailsPage implements OnInit {
   }
 
   ngOnInit() {
+    this.plt.ready().then(() => {
+      let path = this.file.dataDirectory;
+      // this.file.checkDir(path, MEDIA_FOLDER_NAME).then( result =>{
+
+      // }, err =>{
+
+      // })
+      this.loadFiles();
+    }, err => {
+      // this.file.createDir(path, MEDIA_FOLDER_NAME)
+    });
+
     setTimeout(() => {
       if (this.product.corretor) this.loadUser();
       this.getTotalUsers();
@@ -768,7 +793,7 @@ export class DetailsPage implements OnInit {
   // }
 
   getImages() {
-    this.options = {
+    let options: ImagePickerOptions = {
       // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
       // selection of a single image, the plugin will return it.
       maximumImagesCount: 3,
@@ -782,7 +807,7 @@ export class DetailsPage implements OnInit {
       //height: 200,
 
       // quality of resized image, defaults to 100
-      quality: 25,
+      quality: 25
 
       // output type, defaults to FILE_URIs.
       // available options are 
@@ -791,13 +816,21 @@ export class DetailsPage implements OnInit {
       // outputType: 1
     };
     this.imageResponse = [];
-    this.imagePicker.getPictures(this.options).then((results) => {
-      for (var i = 0; i < results.length; i++) {
-        this.imageResponse.push('data:image/jpeg;base64,' + results[i]);
+    this.imagePicker.requestReadPermission().then(result => {
+      if (result) {
+        this.imagePicker.getPictures(options).then((results) => {
+          if (results) {
+            for (var i = 0; i < results.length; i++) {
+              this.imageResponse.push('data:image/jpeg;base64,' + results[i]);
+            }
+          }
+        }, (err) => {
+          this.presentToast(err);
+        });
       }
-    }, (err) => {
-      alert(err);
-    });
+
+    })
+
   }
 
   // testeImagens() {
@@ -822,6 +855,89 @@ export class DetailsPage implements OnInit {
   //     }, (err) => { });
   //   }
   // }
+
+  openFile(f: FileEntry){
+    if(f.name.indexOf('.wav') > -1){
+      const path = f.nativeURL.replace(/^file:\/\//, '');
+      const audioFile: MediaObject = this.media.create(path);
+      audioFile.play();
+    } else if(f.name.indexOf('.MOV') > -1 || f.name.indexOf('.mp4') > -1) {
+      this.streamingMedia.playVideo(f.nativeURL);
+    } else if(f.name.indexOf('.jpg') > -1) {
+      this.photoViewer.show(f.nativeURL, 'Minha Imagem');
+    }
+  }
+
+  deleteFile(f: FileEntry){
+    const path = f.nativeURL.substr(0, f.nativeURL.lastIndexOf('/') +1);
+
+    this.file.removeFile(path, f.name).then(() => {
+      this.loadFiles();
+    }, err => console.log('error remove: ', err));
+  }
+
+  loadFiles(){
+    // this.file.listDir(this.file.dataDirectory).then( res =>{
+    //   this.files = res;
+    //   console.log('files: ', res);
+    // });
+  }
+
+  copyFileToLocalDir(fullPath) {
+    console.log('copy now: ', fullPath);
+    let myPath = fullPath;
+    if (fullPath.indexOf('file://') < 0) {
+      myPath = 'file://' + fullPath;
+    }
+
+    const ext = myPath.split('.').pop();
+    const d = Date.now();
+    const newName = `${d}.${ext}`;
+
+    const name = myPath.substr(myPath.lastIndexOf('/') + 1);
+    const copyFrom = myPath.substr(0, myPath.lastIndexOf('/') +1);
+    const copyTo = this.file.dataDirectory + MEDIA_FOLDER_NAME;
+
+    this.file.copyFile(copyFrom, name, copyTo, newName).then(() => {
+      this.loadFiles();
+    }, err => console.log('error: ', err))
+  }
+
+  pickImages() {
+    this.imagePicker.getPictures({}).then(results => {
+      console.log('images: ', results);
+      for (let result of results) {
+        this.copyFileToLocalDir(result);
+      }
+    })
+  }
+
+  async selectMedia() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'O que você quer Adicionar?',
+      buttons: [
+        {
+          text: 'Capturar Images',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => {
+            // this.uploadFile();
+          }
+        }, {
+          text: 'Multiple Images',
+          icon: 'images-outline',
+          handler: () => {
+            this.pickImages();
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
 
 
 }
