@@ -10,6 +10,7 @@ export interface Product {
     valor_condominio?: string;
     valor_iptu?: string;
     valor?: string;
+    valor_locacao?: string;
     //endereco
     endereco?: string;
     bairro?: string;
@@ -33,6 +34,7 @@ export interface Product {
     detalhe_um?: boolean;
     detalhe_dois?: boolean;
     detalhe_tres?: boolean;
+    detalhe_quatro?: boolean;
     images?: Array<String>;
     video?: string;
 }

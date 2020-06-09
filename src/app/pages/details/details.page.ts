@@ -45,6 +45,7 @@ export class DetailsPage implements OnInit {
   public piscina: string;
   public lazer: string;
   public churrasqueira: string;
+  public area_gourmet: string;
   public videofinal: any = {};
   public id: string = null;
   public primeiraFoto: string;
@@ -122,7 +123,8 @@ export class DetailsPage implements OnInit {
       'finalidade': [null, Validators.required],
       'valor_condominio': [null],
       'valor_iptu': [null],
-      'valor': [null, Validators.required],
+      'valor': [null],
+      'valor_locacao': [null],
       'endereco': [null],
       'bairro': [null],
       'area_util': [null],
@@ -137,6 +139,7 @@ export class DetailsPage implements OnInit {
       'detalhe_um': [null],
       'detalhe_dois': [null],
       'detalhe_tres': [null],
+      'detalhe_quatro': [null],
       'observacao': [null, Validators.compose([
         Validators.maxLength(250)
       ])],
@@ -176,6 +179,9 @@ export class DetailsPage implements OnInit {
     if (this.product.detalhe_tres) {
       this.churrasqueira = "*Imovel com Churrasqueira*";
     }
+    if (this.product.detalhe_quatro) {
+      this.area_gourmet = "*Imovel com Área Gourmet*";
+    }
 
     this.mensagem = "*Imobiliária C.IMOB*\n\n"
       + "*Imovel:* " + this.product.tipo + "\n";
@@ -197,6 +203,9 @@ export class DetailsPage implements OnInit {
     if (this.product.detalhe_tres) {
       this.mensagem += this.churrasqueira + "\n";
     }
+    if (this.product.detalhe_quatro) {
+      this.mensagem += this.area_gourmet + "\n";
+    }
     if (this.product.valor_iptu != null) {
       this.mensagem += "*IPTU:* " + this.product.valor_iptu + "\n";
     }
@@ -204,7 +213,10 @@ export class DetailsPage implements OnInit {
       this.mensagem += "*Condomínio:* " + this.product.valor_condominio + "\n";
     }
     if (this.product.valor != null) {
-      this.mensagem += "*Valor Imovel:* " + this.product.valor + "\n\n";
+      this.mensagem += "*Valor Venda:* " + this.product.valor + "\n\n";
+    }
+    if (this.product.valor_locacao != null) {
+      this.mensagem += "*Valor Locação:* " + this.product.valor_locacao + "\n\n";
     }
 
     this.fotos = [];
@@ -477,6 +489,7 @@ export class DetailsPage implements OnInit {
       valor_condominio: this.product.valor_condominio,
       valor_iptu: this.product.valor_iptu,
       valor: this.product.valor,
+      valor_locacao: this.product.valor_locacao,
       endereco: this.product.endereco,
       bairro: this.product.bairro,
       area_util: this.product.area_util,
@@ -491,6 +504,7 @@ export class DetailsPage implements OnInit {
       detalhe_um: this.product.detalhe_um,
       detalhe_dois: this.product.detalhe_dois,
       detalhe_tres: this.product.detalhe_tres,
+      detalhe_quatro: this.product.detalhe_quatro,
       observacao: this.product.observacao,
       images: this.product.images,
       corretor: this.product.corretor,
@@ -517,6 +531,7 @@ export class DetailsPage implements OnInit {
     this.product.valor_condominio = this.fGroup.value['valor_condominio'];
     this.product.valor_iptu = this.fGroup.value['valor_iptu'];
     this.product.valor = this.fGroup.value['valor'];
+    this.product.valor_locacao = this.fGroup.value['valor_locacao'];
     this.product.endereco = this.fGroup.value['endereco'];
     this.product.bairro = this.fGroup.value['bairro'];
     this.product.area_util = this.fGroup.value['area_util'];
@@ -531,6 +546,7 @@ export class DetailsPage implements OnInit {
     this.product.detalhe_um = this.fGroup.value['detalhe_um'];
     this.product.detalhe_dois = this.fGroup.value['detalhe_dois'];
     this.product.detalhe_tres = this.fGroup.value['detalhe_tres'];
+    this.product.detalhe_quatro = this.fGroup.value['detalhe_quatro'];
     this.product.observacao = this.fGroup.value['observacao'];
     //this.product.corretor = this.authService.getAuth().currentUser.uid;
   }
@@ -562,6 +578,7 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('valor_condominio').setValue(this.product.valor_condominio);
       this.fGroup.get('valor_iptu').setValue(this.product.valor_iptu);
       this.fGroup.get('valor').setValue(this.product.valor);
+      this.fGroup.get('valor_locacao').setValue(this.product.valor_locacao);
       this.fGroup.get('endereco').setValue(this.product.endereco);
       this.fGroup.get('bairro').setValue(this.product.bairro);
       this.fGroup.get('area_util').setValue(this.product.area_util);
@@ -576,6 +593,7 @@ export class DetailsPage implements OnInit {
       this.fGroup.get('detalhe_um').setValue(this.product.detalhe_um);
       this.fGroup.get('detalhe_dois').setValue(this.product.detalhe_dois);
       this.fGroup.get('detalhe_tres').setValue(this.product.detalhe_tres);
+      this.fGroup.get('detalhe_quatro').setValue(this.product.detalhe_quatro);
       this.fGroup.get('observacao').setValue(this.product.observacao);
       if (this.product.video != null) {
         this.video = this.product.video;
