@@ -2,11 +2,12 @@
   "name": "c-imob",
   "version": "0.0.1",
   "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "homepage": "git+https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "move-static": "cp -a ./node_modules/@pdftron/webviewer/public/. ./dist/public/webviewer",
+    "build": "ng build && npm run move-static",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
